@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match | Mujeres Rompiendo Barreras</title>
+    <link rel="stylesheet" href="css/style.css">
+    <meta property="og:image" content="https://hely.com.co/mrb/redes.png">
+    <meta name="description" content="Match Mentee - Mentora de Mujeres Rompiendo Barreras 2024">
+    <meta property="og:title" content="Mujeres Rompiendo Barreras">
+    <meta property="og:description" content="Match Mentee - Mentora de Mujeres Rompiendo Barreras 2024">
+
+    <style>
+        /* Estilos de la paginación */
+    </style>
+</head>
+
+<body>
+
+    <style>
+        .logo {
+            width: 10rem;
+        }
+
+        .logo-mrb {
+            margin: 0 auto;
+            display: flex;
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* --- AJUSTES DE CENTRADO PARA EL TÍTULO Y LOGO --- */
+        .claim {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            text-align: center;
+            margin-top: 2rem; /* Espacio superior para que no quede pegado arriba */
+        }
+
+        h4 {
+            font-size: 2rem;
+            margin-top: 1rem; /* Espaciado entre el logo y el texto */
+            margin-bottom: 0;
+        }
+        /* ------------------------------------------------- */
+
+        .container-match {
+            width: 90%;
+        }
+
+        .card {
+            width: 15rem;
+            height: 23rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .card img {
+            opacity: 1;
+        }
+
+        .textos-card {
+            position: absolute;
+            z-index: 10;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-size: 1rem;
+            background-color: #B31C82;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 7rem;
+            padding: .3rem;
+        }
+
+        .textos-card h3 {
+            font-size: 1.1rem;
+            height: 2.5rem;
+            padding: .5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center
+        }
+
+        .textos-card .profesion {
+            font-size: .9rem;
+            padding: .2rem;
+            font-weight: 500;
+        }
+
+        .card-container {
+            flex-wrap: wrap;
+            width: 80%;
+            padding-bottom: 2rem;
+            padding-top: 4rem; /* Reduje el padding-top para que no quede tan lejos del título */
+            margin: 0 auto;
+            display: flex; /* Asegura que funcione con tu flex-wrap */
+            justify-content: center; /* Centra las tarjetas también */
+        }
+
+        .card h3.nombres {
+            height: 40px;
+            font-size: 1.1rem;
+        }
+
+        .mentora h3.nombres {
+            background-color: #0097A1;
+        }
+
+        .card.mentora .video-button {
+            display: none;
+        }
+
+        .pareja {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .card.mentora {
+            border-radius: 20px 0px 0px 20px !important;
+        }
+
+        .card.mentee {
+            border-radius: 0px 20px 20px 0px !important;
+        }
+
+        div#pagination-container {
+            position: absolute;
+            bottom: 0;
+        }
+
+        @media (max-width:1920px) {
+            .card {
+                width: 12rem;
+                height: 20rem;
+            }
+
+            .card h3.nombres {
+                height: 35px;
+                font-size: .8rem;
+            }
+        }
+
+        @media (max-width:768px) {
+            .logo-mrb {
+                position: relative;
+                right: unset;
+                top: unset;
+                padding-top: 2rem;
+            }
+
+            .logo-match {
+                position: relative;
+                left: unset;
+                top: unset;
+            }
+
+            .logo {
+                width: 7rem;
+            }
+
+            .card {
+                width: 11rem;
+                height: 19rem;
+            }
+        }
+
+        .bg-image {
+            width: 100%;
+            height: 16rem;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+        }
+
+        .bg-morado {
+            width: 100%;
+            position: absolute;
+            z-index: -1;
+            bottom: 0;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            gap: .5rem;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            background-color: #B31C82;
+            color: white;
+            border: none;
+            padding: .5rem .8rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .pagination button.active {
+            background-color: #0097A1;
+        }
+
+        .pagination button:disabled {
+            background-color: #ccc;
+            cursor: default;
+        }
+    </style>
+    
+    <div id="image-preload" style="display: none;"></div>
+
+    <!-- Contenido centrado -->
+    <main>
+        
+        <div class="claim">
+                <img src="logo-mrb-white.svg" class="logo" alt="">
+            
+            <h4>Mentoras 2026</h4>
+        </div>
+        
+        <div class="card-container" id="card-container">
+            <!-- Las cartas se generarán automáticamente aquí -->
+        </div>
+
+        <div class="pagination" id="pagination-container"></div>
+        <button id="verSaludoBtn" style="display: none;">Ver Saludo</button>
+        
+        <!--<div class="bg-morado">
+            <img src="img/fondo-morado.svg" alt="">
+        </div>-->
+    </main>
+
+    <!-- Scripts para partículas y generación de cartas -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+    </script>
+    <script src="js/script.js"></script>
+    <script src="js/basementoras.js?v=1.8"></script>
+</body>
+
+</html>

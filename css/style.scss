@@ -1,0 +1,365 @@
+// Variables de colores
+$color-bg: #222; // Morado oscuro
+$color-text: #fff; // Blanco
+$color-accent-1: #3d3366; // Morado
+$color-accent-2: #B31C82; // Fucsia
+$color-accent-3: #0097A1; // Aguamarina
+
+// Variables de fuente
+$font-family: 'Montserrat',sans-serif;
+$font-size-base: 20px; // Tamaño base de la fuente en rem
+
+// Estilos base
+body {
+    margin: 0;
+    padding: 0;
+    font-family: $font-family;
+    display: flex; 
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: $color-accent-1;
+    color: $color-text;
+    font-size: $font-size-base; // Tamaño base de la fuente
+}
+
+h1,
+h2 {
+    color: $color-accent-3; // Color para los encabezados h1 y h2
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.box {
+    margin: 1rem; // Margen en relación con la fuente base
+    padding: 2rem; // Relleno en relación con la fuente base
+    background-color: $color-accent-1; // Puedes cambiar a $color-accent-2 o $color-accent-3 según necesites
+    border-radius: 10px;
+    text-align: center;
+}
+
+#particle-bg {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+#particle-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.logo-mrb {
+    position: absolute;
+    right: 4rem;
+    top: 6rem;
+}
+.logo-match {
+    position: absolute;
+    left: 4rem;
+    top: 6rem;
+}
+
+.logo {
+    width: 12rem;
+    margin-bottom: 2rem;
+}
+
+// Estilos de la paginación
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    opacity: .8;
+    background-color: $color-accent-1; // Cambiado a la variable de color
+    color: $color-text; // Cambiado a la variable de color
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+    background-color: $color-accent-2; // Cambiado a la variable de color
+}
+
+// Estilos del cuerpo y el contenedor principal
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+
+    color: $color-text; // Cambiado a la variable de color
+    perspective: 1000px; // Profundidad de la perspectiva para las transformaciones 3D
+}
+
+.card-container {
+    display: flex;
+    width: 60%;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    width: 24rem;
+    height: 34rem;
+    background-color: $color-accent-2; // Aguamarina
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transform-style: preserve-3d; // Conservar las transformaciones 3D para los hijos
+    transition: transform 0.5s ease; // Transición suave al girar las cartas
+    cursor: pointer; // Cambiar el cursor al pasar sobre la carta
+    position: relative; // Para posicionar el contenido de la carta
+    overflow: hidden; // Ocultar el contenido que se desborde
+}
+
+.card.clicked {
+    transform: rotateY(180deg); // Girar la carta al hacer clic
+}
+
+.card h3 {
+    margin: 0;
+    opacity: 1;
+    transition: opacity 0.3s ease; // Transición suave para la opacidad
+}
+
+.card h3.nombres {
+    opacity: 0; // Nombre oculto por defecto
+    z-index: 10;
+    background-color: $color-accent-2;
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease; // Transición suave para la opacidad
+    transform: inherit; // Transición suave para la opacidad
+}
+
+.card.clicked h3 {
+    opacity: 0; // Ocultar el nombre al hacer clic en la carta
+}
+
+.card.clicked h3.nombres {
+    opacity: 1; // Mostrar el nombre al hacer clic en la carta
+}
+
+.card img {
+    width: 100%; // La imagen ocupa todo el ancho de la carta
+    height: 100%; // La imagen ocupa todo el alto de la carta
+    object-fit: cover; // Ajustar la imagen al tamaño de la carta sin deformarla
+    overflow: hidden; // Ocultar cualquier parte de la imagen que se desborde
+    opacity: 0; // La imagen está oculta inicialmente
+    transition: opacity 0.3s ease; // Transición suave al mostrar la imagen
+    position: absolute; // Posicionar la imagen absolutamente dentro de la carta
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    backface-visibility: hidden; // Ocultar la cara posterior de la carta
+}
+
+.card.clicked img {
+    opacity: 1; // Mostrar la imagen al hacer clic en la carta
+    transform: rotateY(360deg) scaleX(-1); // Girar la carta al hacer clic
+}
+
+.flipped {
+    transform: rotateY(180deg); // Girar la carta 180 grados al estar volteada
+}
+
+.container-match {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+div#pagination-container {
+    width: 70%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.pagination button.active {
+    background-color: #B31C82;
+    /* Fucsia */
+    font-weight: bold;
+}
+
+/* Estilos para el modal */
+.modal {
+    display: none;
+    /* Por defecto el modal estará oculto */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    margin: 15% auto;
+    padding: 0px;
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+}
+
+iframe#video-modal {
+    width: 100%;
+    height: 460px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+
+    &:hover,
+    &:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+}
+
+/* CSS para el botón "Ver Saludo" */
+#verSaludoBtn {
+    display: block;
+    margin: 10px auto;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#verSaludoBtn:hover {
+    background-color: #0056b3;
+}
+
+
+.card {
+    /* Estilos para la card */
+    position: relative;
+    perspective: 1000px;
+    /* Ajustar la perspectiva para el efecto de giro */
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+    cursor: pointer;
+
+    .video-button {
+        display: none;
+    }
+
+    &.clicked {
+        transform: rotateY(180deg);
+        /* Rotar la card al ser clickeada */
+
+        .video-button {
+            display: block;
+
+        }
+    }
+
+
+    &.mentora .video-button {
+        position: absolute;
+
+        /* -webkit-transform: translate(-50%, -50%); */
+        /* transform: translate(-50%, -50%); */
+        z-index: 21;
+        transform: inherit;
+        bottom: 60px;
+        top: unset;
+        right: 50%;
+        width: 200px;
+        height: 25px;
+        border-radius: 15px;
+        background-color: $color-accent-3;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+    }
+
+
+}
+
+.redes{
+
+    main{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content:space-between;
+        div.link{
+            width: 100%;
+            height: 33%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: $color-accent-1;
+
+            &.central{
+                background-color: $color-accent-2;
+            }
+
+            a{  
+                width: 100%;
+                height: 100%;
+                text-decoration: none;
+                color: white;
+                display: flex;
+                justify-content: center;
+                flex-direction: row;
+                align-items: center;
+                transition: all .5s ease-in-out;
+
+                i.fa-brands {
+                    font-size: 5rem;
+                }
+                h3{
+                    color: $color-text;
+                    margin: 0 0 0 10px;
+                    font-size: 5rem;
+                }
+
+                &:hover{
+                    filter: brightness(95%);
+                    opacity: .2;
+                }
+            }
+
+        }
+    }
+}

@@ -1,0 +1,974 @@
+@import "./reset";
+
+:root {
+    --green: #009056;
+    --yellow: #EBB937;
+    --text: #686868;
+    --grey: #CCCCCC;
+    --red: #BF4659;
+    --acyellow: #716122;
+    --acgreen: #70B66B;
+    --ligreen: #F0F6F3;
+}
+
+/* variables*/
+
+
+
+$green: #009056;
+$yellow: #EBB937;
+$text: #686868;
+$grey: #CCCCCC;
+$darkGrey: #9BA1A8;
+$red: #BF4659;
+$acyellow: #716122;
+$acgreen: #70B66B;
+$ligreen: #F0F6F3;
+$azul-200: #006099;
+$azul-100: #3e97cc;
+$naranja: #ff9d21;
+
+/************************************************************
+                        RESPONSIVE
+ *************************************************************/
+
+$tablet: 1024px;
+$hd: 1400px;
+$full: 1600px;
+
+@mixin view-tablet {
+    @media screen and (min-width: $tablet) {
+        @content;
+    }
+}
+
+@mixin view-hd {
+    @media screen and (min-width: $hd) {
+        @content;
+    }
+}
+
+@mixin view-full {
+    @media screen and (min-width: $full) {
+        @content;
+    }
+}
+
+/************************************************************
+                      ESTILOS GLOBALES
+ *************************************************************/
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth !important;
+
+    @include view-tablet() {
+        font-size: 0.8rem;
+    }
+
+    @include view-hd() {
+        font-size: 1rem;
+    }
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+h1, h2, h3,h4, h5{
+    font-family: 'Montserrat', sans-serif;
+
+}
+
+img {
+    max-width: 100%;
+}
+
+p,
+a,
+ul li {
+    font-size: 1.1rem;
+    line-height: 2rem;
+    text-decoration: none;
+
+
+}
+
+p strong {
+    font-weight: 600;
+}
+
+.font- {
+    &r {
+        font-weight: 400;
+    }
+
+    &b {
+        font-weight: 700;
+    }
+}
+
+p {
+    color: $text;
+}
+
+/************************************************************
+                       UTILIDADES
+ *************************************************************/
+
+.flex {
+    display: flex;
+}
+
+.grid {
+    display: grid;
+}
+
+.ma {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.wrap {
+    padding: 0 8%;
+}
+
+.btn {
+    display: inline-block;
+    border-radius: 2rem;
+    text-decoration: none;
+    padding: .7rem 2rem;
+    color: $azul-200;
+    font-weight: 600;
+    font-size: 1.2rem;
+    max-width: 250px;
+    margin: 0 auto;
+    background-color: #fff;
+    transition: all .3s ease-in-out;
+    cursor: pointer;
+    border: 1px solid $azul-100;
+
+    &:hover {
+        background-color: $azul-100;
+        border-color: #fff;
+        color: #fff;
+        box-shadow: inset 0 0 0 #c1c1c1;
+    }
+
+    &-secondary {
+        color: #686868;
+        background: #e0e0e0;
+        margin-top: 1rem;
+        transition: 200ms background ease-in-out;
+
+
+        &:hover {
+            background: darken(#686868, 5%);
+            color: #fff;
+        }
+    }
+}
+
+/************************************************************
+                     ESTILOS SECCION
+ *************************************************************/
+
+main {
+
+    .contenedor {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        min-height: 96vh;
+
+
+        .right {
+            min-height: 96vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            .ruleta {
+
+                .vara {
+                    height: 100px;
+                    width: 100px;
+                    margin: auto;
+                    position: relative;
+                    top: 70px;
+                    z-index: 1000;
+                    background-image: url(../img/arrow-ruleta.svg);
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    left: 0;
+                    right: 0;
+                }
+
+                .imagen-ruleta {
+                    position: relative;
+                }
+
+                .center-ruleta {
+                    position: absolute;
+                    background-image: url(../img/centro-ruleta.svg);
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    width: 120px;
+                    height: 120px;
+                    left: 0;
+                    right: 0;
+                    margin: 0 auto;
+                    z-index: 50;
+                    top: calc(45% - 30px);
+                    bottom: 0%;
+                    background-size: cover;
+                    cursor: pointer;
+                    transition: all cubic-bezier(0.075, 0.82, 0.165, 1) .5s;
+
+                    &:hover {
+                        transform: rotate(360deg) scale(1.05);
+                    }
+                }
+
+                .patas-ruleta {
+                    position: absolute;
+                    background-image: url(../img/footer-ruleta.png);
+                    background-position: bottom;
+                    background-repeat: no-repeat;
+                    width: 100%;
+                    height: 25rem;
+                    left: 0;
+                    right: 0;
+                    margin: 0 auto;
+                    z-index: 1;
+                    bottom: -30%;
+                    background-size: cover;
+
+                }
+
+                img#ruleta {
+                    opacity: 1;
+                    position: relative;
+                    z-index: 10;
+                }
+            }
+
+            
+        }
+    }
+
+
+}
+
+.bg-page {
+    position: fixed;
+    background-image: url(../img/bg-ruleta.jpg);
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+    background-position: center;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    background-blend-mode: screen;
+    background-color: #686868;
+    @media (max-width:990px){
+        background-image: url(../img/bg-mobile.jpg);
+        background-size: cover;
+        height: 100vh;
+    }
+}
+
+
+.home {
+
+    main {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+
+        .left {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            background-image: url(../img/bg-home.png);
+            width: 50%;
+            background-position: right top;
+            background-size: cover;
+        }
+
+        .right {
+            width: 50%;
+            margin-left: 55%;
+
+            h1 {
+                font-size: 4rem;
+                text-align: center;
+                font-weight: 600;
+                color: #686868;
+                padding-bottom: 2rem;
+
+                span {
+                    color: $azul-100;
+                    font-style: italic;
+                }
+            }
+
+            h3 {
+                text-align: center;
+                font-weight: 600;
+                color: #686868;
+                font-size: 1.5rem;
+                padding-bottom: 1.5rem;
+            }
+
+            p {
+                text-align: center;
+            }
+        }
+
+        .intro {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            .btn-intro {
+                background-image: url(../img/arrow-down.svg);
+                background-repeat: no-repeat;
+                background-position: 90% center;
+                background-size: 1rem;
+                padding-right: 45px;
+
+                &:hover {
+                    background-image: url(../img/arrow-down-2.svg);
+                }
+            }
+
+            .botones-marcas {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+
+                .btn-marca a {
+                    width: 210px;
+                    height: 70px;
+                    margin: 25px 5px;
+                    border-radius: 10px;
+                    background-repeat: no-repeat;
+                    background-size: 75%;
+                    background-position: center;
+                    pointer-events: none;
+                    background-color: #ffffffbd;
+                    border: 1px solid #fff;
+
+                    &.jp {
+                        background-image: url(../img/logo-jp.svg);
+                        background-size: 50%;
+
+                        &:hover {
+                            background-color: #24D869;
+                            background-image: url(../img/logo-wh-3.svg);
+                        }
+                    }
+
+                    &.cc {
+                        background-image: url(../img/logo-cc.svg);
+
+                        &:hover {
+                            background-color: #4597CB;
+                            background-image: url(../img/logo-wh-2.svg);
+                        }
+                    }
+
+                    &.dk {
+                        background-image: url(../img/logo-dk.svg);
+
+                        &:hover {
+                            background-color: #AFC000;
+                            background-image: url(../img/logo-wh-1.svg);
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+
+        section#formulario {
+            height: 140vh;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+    }
+
+    .modal .modal-header {
+        border-bottom: none;
+        height: auto;
+        background-position: center;
+        background-size: cover;
+        background-color: transparent;
+        background-repeat: no-repeat;
+    }
+
+    .modal {
+        p {
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #686868;
+            font-style: normal;
+            line-height: 1.4rem;
+            padding: 30px 20px;
+
+            a {
+                color: #006099;
+                font-size: 1rem;
+            }
+        }
+
+
+
+    }
+
+
+}
+
+.ruleta-page {
+    main .contenedor .right {
+        min-height: 98vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+
+        @media (max-width:990px){
+            min-height: auto;
+        }
+    }
+
+    .left.col-6 {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+
+        h1 {
+            font-size: 4rem;
+            text-align: center;
+            font-weight: 600;
+            color: $azul-100;
+            padding-bottom: 2rem;
+
+            span {
+                color: $naranja;
+                font-style: italic;
+            }
+        }
+
+        h3 {
+            text-align: center;
+            font-weight: 600;
+            color: $text;
+            font-size: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+
+        p {
+            text-align: center;
+        }
+
+        h2.claim {
+            color: $text;
+            font-size: 1.6rem;
+            font-weight: 600;
+            font-style: italic;
+            padding-top: 2rem;
+        }
+    }
+}
+
+img {
+    z-index: 100;
+    transition: all 5s;
+}
+
+#premio {
+    padding: 20px;
+
+    
+}
+
+footer {
+    position: relative;
+    background-color: #fff;
+
+    .logos-footer {
+        display: flex;
+        justify-content: space-around;
+        padding: 1.5rem 0;
+
+        .logo-f {
+            width: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &:nth-child(3) {
+                img.logo {
+                    width: 115px;
+                }
+
+            }
+
+            img.logo {
+                width: 150px;
+            }
+
+        }
+    }
+}
+
+.jelpit footer .logos-footer .logo-f img.logo {
+    width: 100px;
+}
+
+.modal {
+
+    .modal-content {
+
+        border: none;
+        border-radius: 0.5rem;
+        box-shadow: -1px 0px 10px 5px #686868;
+    }
+
+    p {
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: $text;
+
+        font {
+            display: block;
+            font-size: 2.1rem;
+            padding-bottom: 1rem;
+            font-style: normal;
+        }
+
+        &.valido{
+            font-size: .9rem;
+            text-align: center;
+            margin-bottom: 10px;
+            display: none;
+            &.mostrar{
+                display: block;
+            }
+        }
+    }
+
+    .dk~.modal-body p.elije font {
+        color: #346a00 !important;
+        font-weight: 600;
+    }
+
+    .modal-body p.elije span {
+        color: $azul-100 !important;
+        font-style: italic;
+        font-weight: 600;
+        display: block;
+    }
+
+    .modal-body p.elije font {
+        color: $azul-200 !important;
+        font-weight: 600;
+        display: block;
+    }
+
+
+    .jp~.modal-body p.elije font {
+        color: #2d0163 !important;
+    }
+
+    .modal-footer {
+        border-top: none;
+    }
+
+    .modal-header {
+        border-bottom: none;
+
+        height: 110px;
+        background-position: center bottom;
+        background-size: cover;
+        background-color: #f8de91;
+        background-repeat: no-repeat;
+
+        &.gana {
+            background-image: url(../img/ganaste-cc.png);
+            &.cc {
+                background-image: url(../img/ganaste-cc.png);
+            }
+
+            &.jp {
+                background-image: url(../img/ganaste-jp.png);
+            }
+
+            &.dk {
+                background-image: url(../img/ganaste-dk.png);
+            }
+
+        }
+
+
+        &.pierde {
+            background-image: url(../img/perdiste.jpg);
+            background-position: center -20px;
+        }
+
+        &.gira {
+            background-image: url(../img/gira.jpg);
+        }
+
+        .btn-close {
+            background-color: $azul-100;
+            border-radius: 50%;
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            border: 1px solid #fff;
+            background: transparent url(../img/close.svg) center/1em auto no-repeat;
+            opacity: 1;
+            background-size: contain;
+            transition: all .3s ease-in-out;
+        }
+
+        .btn-close:hover {
+            opacity: .8;
+
+        }
+
+    }
+}
+
+
+.cta-modal a {
+    border: 1px solid $azul-100;
+    transition: all .3s ease-in-out;
+}
+
+main .contenedor .right .ruleta .patas-ruleta {
+    display: none;
+}
+
+@media (min-width:1900px) {
+
+    main .contenedor .left .container.d-flex.flex-column {
+        min-height: 110vh;
+    }
+
+    main .contenedor .right .ruleta .center-ruleta {
+        width: 160px;
+        height: 160px;
+    }
+
+    .vara {
+        height: 150px;
+        width: 150px;
+        top: 90px;
+    }
+
+}
+
+
+
+
+@media (min-width:991px) {
+
+
+    .textos {
+        padding-top: 130px;
+    }
+}
+
+
+@media (max-width:1350px) {
+
+    .home main .intro,
+    .home main section#formulario {
+        height: 140vh;
+    }
+}
+
+@media (max-width:990px) {
+
+    main .contenedor {
+        flex-direction: column;
+        min-height: 96vh;
+        height: auto;
+    }
+
+
+
+    .col-6 {
+        width: 100%;
+        text-align: center;
+    }
+
+    .right.col-5 {
+        width: 100%;
+
+        .ruleta {
+            max-width: 70%;
+            margin: 0px 11rem;
+
+        }
+    }
+
+    main .contenedor .right {
+        min-height: 10vh;
+    }
+
+    .vara {
+        height: 80px;
+        width: 80px;
+        top: 45px;
+
+    }
+
+    main .contenedor .left .container.d-flex.flex-column {
+        min-height: 10vh;
+    }
+}
+
+
+@media (max-width: 768px) {
+    fieldset.mktoFormCol {
+        /* padding-right: 0px; */
+        margin-bottom: 120px !important;
+    }
+
+    .right.col-5 .ruleta {
+        max-width: 100%;
+        margin: 0px 2rem;
+    }
+
+    main .contenedor .right .ruleta .center-ruleta {
+        height: 80px;
+        width: 80px;
+        top: calc(45% - 25px);
+    }
+
+    .vara {
+        height: 60px;
+        width: 60px;
+        top: 35px;
+    }
+
+    .home {
+        main {
+            flex-direction: column;
+
+            .right {
+                width: 100%;
+                margin-left: 0%;
+                margin-top: 0;
+
+                .intro {
+                    height: auto;
+
+                    a.btn.btn-intro {
+                        display: none;
+                    }
+
+                    .botones-marcas .btn-marca a {
+                        margin: 10px 5px;
+                    }
+                }
+
+                h1 {
+                    font-size: 2.8rem;
+                }
+
+                section#formulario {
+                    height: auto;
+                }
+            }
+
+            .left {
+                background-image: url(../img/header-m-home.png);
+                width: 100%;
+                background-position: right bottom;
+                position: relative;
+                height: 470px;
+            }
+        }
+    }
+
+    .interna {
+        header {
+            .hero-image {
+                .imagen-header {
+                    background-position: center bottom;
+                    height: 440px;
+
+                }
+
+                &.dk {
+                    .imagen-header {
+                        background-image: url(../img/header-m-dk.png);
+                    }
+                }
+
+                &.cc {
+                    .imagen-header {
+                        background-image: url(../img/header-m-cc.png);
+                    }
+                }
+
+                &.jp {
+                    .imagen-header {
+                        background-image: url(../img/header-m-jp.png);
+                        background-position: center bottom;
+                    }
+                }
+
+                .textos-header {
+                    height: 440px;
+
+                    h1 {
+                        font-size: 2rem;
+                        padding-bottom: 1rem;
+                    }
+
+                    h3 {
+                        margin-bottom: 4rem;
+                        font-size: .9rem;
+                        padding: 0 20px;
+                    }
+                }
+
+                .conector {
+                    width: 80%;
+                }
+
+            }
+
+            .gradient {
+                display: none;
+            }
+        }
+
+        main {
+            .dos-columnas {
+                flex-direction: column;
+
+                li {
+                    font-size: .9rem;
+                    padding-left: 30px;
+                    position: relative;
+                    text-align: left;
+                    line-height: 1.2rem;
+                    padding-bottom: 0.5rem;
+                }
+            }
+        }
+
+        main .botones-nav {
+
+            flex-direction: row;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        main .botones-nav .btn {
+
+            margin: 0px 0;
+            padding-left: 2rem;
+            width: 100%;
+            max-width: 100%;
+            border-radius: 0;
+        }
+    }
+
+    footer .logos-footer {
+        flex-wrap: wrap;
+
+        .logo-f img.logo {
+            width: 150px;
+            margin: 10px;
+
+        }
+
+        .logo-f:nth-child(3) {
+            width: 100px;
+        }
+    }
+
+    
+
+    .ruleta-page {
+        .left.col-6 h1 {
+            font-size: 2.5rem;
+
+        }
+
+        main .contenedor .right .ruleta .patas-ruleta {
+
+            height: 18rem;
+
+        }
+
+        main .contenedor .right .ruleta .vara {
+            height: 70px;
+            width: 70px;
+            top: 50px;
+
+        }
+
+        .left.col-6 h2.claim {
+            padding: 2rem 20px 0;
+        }
+
+        .left.col-6.py-5 {
+            padding-bottom: 0 !important;
+        }
+    }
+}
+
+@media (max-width:640px) {
+    .home main .left {
+        height: 390px;
+    }
+}
+
+@media (max-width:400px) {
+    main .contenedor .right .ruleta .center-ruleta {
+        height: 50px;
+        width: 50px;
+        top: calc(45% - 15px);
+    }
+
+    .home main .left {
+        height: 320px;
+    }
+}
+
+a#lkn_tratamiento {
+    color: $azul-100;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1.1rem;
+    text-align: center;
+}
+
+label#LbldAConsentimientoComercial {
+    text-align: center;
+    width: 100% !important;
+    padding: 0;
+}

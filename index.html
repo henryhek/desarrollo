@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match | Mujeres Rompiendo Barreras</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* Estilos de la paginación */
+    </style>
+</head>
+
+<body>
+    <style>
+        .bg-image {
+            width: 100%;
+            height: 16rem;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+        }
+
+        .bg-morado {
+            width: 100%;
+            position: absolute;
+            z-index: -1;
+            bottom: 0;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            gap: .5rem;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            background-color: #B31C82;
+            color: white;
+            border: none;
+            padding: .5rem .8rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .pagination button.active {
+            background-color: #0097A1;
+        }
+
+        .pagination button:disabled {
+            background-color: #ccc;
+            cursor: default;
+        }
+    </style>
+    <div id="image-preload" style="display: none;"></div>
+
+    <!-- Fondo de partículas -->
+    <!--  <div id="particle-container">
+        <div id="particle-bg"></div>
+    </div> -->
+
+    <!-- Contenido centrado -->
+
+    <main>
+        <div class="logo-mrb"><img src="mrb-blanco.png" class="logo" alt="">
+        </div>
+        <div class="logo-match"><img src="img/match.svg" class="logo" alt="">
+        </div>
+
+        <div class="container-match">
+            <div class="card-container" id="card-container">
+                <!-- Las cartas se generarán automáticamente aquí -->
+            </div>
+            <!-- Paginación -->
+            <div class="pagination" id="pagination-container">
+                <!-- Los botones de paginación se generarán automáticamente aquí -->
+                <button id="previous-page">Anterior</button>
+                <button id="next-page">Siguiente</button>
+            </div>
+        </div>
+        <button id="verSaludoBtn" style="display: none;">Ver Saludo</button>
+
+        <div class="bg-morado">
+            <img src="img/fondo-morado.svg" alt="">
+        </div>
+
+    </main>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal" class="close">&times;</span>
+            <iframe id="video-modal" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- Scripts para partículas y generación de cartas -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+
+
+    </script>
+    <script src="js/script.js"></script>
+    <script src="js/cards-match.js"></script>
+</body>
+
+</html>

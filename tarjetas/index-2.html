@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Tarjetas de Mentorías V7 - Automático</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-purple: #4c1d6f;
+            --accent-pink: #9d2b81;
+            --bg-body: #f3f0f7;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-body); color: #333; padding: 40px 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 20px; }
+        header h1 { color: var(--primary-purple); font-size: 28px; font-weight: 700; margin-bottom: 10px; }
+        
+        .status-message { text-align: center; font-weight: 600; margin-bottom: 20px; color: var(--primary-purple); font-size: 16px; }
+
+        .actions-header { text-align: center; margin-bottom: 30px; }
+        
+        /* BOTONES DE FILTRO */
+        .filtros-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .btn-filtro {
+            font-family: 'Montserrat', sans-serif;
+            background-color: white;
+            color: var(--primary-purple);
+            border: 2px solid var(--primary-purple);
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-filtro.activo, .btn-filtro:hover {
+            background-color: var(--primary-purple);
+            color: white;
+        }
+        /* GRID DE TARJETAS */
+        .cards-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
+        .card-wrapper { background: white; padding: 20px; border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); text-align: center; width: 510px; }
+        
+        .download-btn {
+            background-color: var(--accent-pink); color: white; border: none; padding: 12px 20px;
+            margin-top: 15px; border-radius: 6px; cursor: pointer; font-family: 'Montserrat', sans-serif;
+            font-weight: 600; width: 100%; font-size: 14px; transition: background 0.2s;
+        }
+        .download-btn:hover { background-color: var(--primary-purple); }
+        
+        .pdf-btn {
+            background-color: var(--primary-purple); width: auto; font-size: 16px; padding: 15px 30px; display: none; margin: 0 auto;
+        }
+
+        /* DIMENSIONES ABSOLUTAS FIJAS */
+        .mentora-card { position: relative; width: 470px; height: 705px; margin: 0 auto; overflow: hidden; border-radius: 8px; background-color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        .card-bg-img { position: absolute; top: 0; left: 0; width: 470px; height: 705px; z-index: 1; pointer-events: none; }
+
+        /* Foto de la mentora en el círculo */
+        .avatar-container {
+            position: absolute; top: 57px; left: 158.5px; width: 158px; height: 158px; 
+            border-radius: 50%; overflow: hidden; z-index: 4; background-color: white;
+        }
+        .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Textos dentro del cuadro blanco */
+        .white-content-box { position: absolute; top: 240px; left: 50px; width: 370px; height: 300px; z-index: 2; display: block; text-align: center; }
+        .mentora-name { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 700; color: #3d1c5a; margin-bottom: 4px; line-height: 1.2; }
+        .mentora-profession { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; font-style: italic; color: var(--accent-pink); margin-bottom: 10px; }
+        .mentora-charge { font-family: 'Montserrat', sans-serif; font-size: 11.5px; font-weight: 600; color: #2b1a3a; margin-bottom: 14px; line-height: 1.4; }
+        .mentora-profile { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 400; color: #444; line-height: 1.6; text-align: center; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 12; -webkit-box-orient: vertical; }
+        /* BADGES DE MODALIDAD */
+        .modalidad-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .badge {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-virtual {
+            background-color: #e0d4eb; /* Morado muy claro */
+            color: var(--primary-purple);
+        }
+        .badge-presencial {
+            background-color: #ffdceb; /* Rosa muy claro */
+            color: var(--accent-pink);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Generador Automatizado de Tarjetas de Mentorías</h1>
+        <p>Iniciativa: Mujeres Rompiendo Barreras — Universidad Externado de Colombia</p>
+    </header>
+
+    <div id="status" class="status-message"></div>
+    
+    <div class="actions-header">
+        <div class="filtros-container">
+    <button class="btn-filtro activo" id="btn-todas" onclick="filtrarMentoras('todas')">Todas</button>
+    <button class="btn-filtro" id="btn-virtual" onclick="filtrarMentoras('virtual')">Virtual</button>
+    <button class="btn-filtro" id="btn-presencial" onclick="filtrarMentoras('presencial')">Presencial</button>
+</div>
+
+        <button id="btn-descargar-pdf" class="download-btn pdf-btn" onclick="descargarTodasPDF()">
+            📄 Descargar Todas en un solo PDF
+        </button>
+    </div>
+
+    <div class="cards-grid" id="cards-container"></div>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzcSycOOXwGkQd6JPB8Go2MGrKZ1kvBurW6viBmblT2C6Ihy-xCx-EhbdTkRuHrNr8JBA/exec";
+
+// Función global ampliada para atrapar casi cualquier formato de Checkbox
+const estaMarcado = (valor) => {
+    if (valor === undefined || valor === null || valor === "") return false;
+    if (typeof valor === 'boolean') return valor;
+    
+    // Lo pasamos a texto minúscula y quitamos espacios
+    const texto = String(valor).trim().toLowerCase();
+    
+    // Evaluamos todas las posibles formas en las que Sheets exporta un Checkbox marcado
+    return texto === "true" || 
+           texto === "verdadero" || 
+           texto === "sí" || 
+           texto === "si" || 
+           texto === "1" || 
+           texto === "yes" || 
+           texto === "on" || 
+           texto === "x";
+};
+
+async function loadSheetData() {
+    const status = document.getElementById('status');
+    const btnPDF = document.getElementById('btn-descargar-pdf');
+
+    status.innerHTML = "⏳ Obteniendo datos de las mentoras en tiempo real...";
+
+    try {
+        const response = await fetch(SCRIPT_URL + "?t=" + Date.now());
+        if (!response.ok) throw new Error("No se pudo conectar con Apps Script.");
+
+        const mentoras = await response.json();
+
+        if (mentoras.error) {
+            status.innerHTML = `❌ Error en los datos: ${mentoras.error}`;
+            return;
+        }
+
+        if (!Array.isArray(mentoras) || mentoras.length === 0) {
+            status.innerHTML = "⚠ La hoja de cálculo está vacía o no tiene el formato correcto.";
+            return;
+        }
+
+        status.innerHTML = `✅ ¡Carga completada! Se detectaron <strong>${mentoras.length} mentoras</strong>.`;
+        btnPDF.style.display = 'inline-block';
+
+        renderizarTarjetas(mentoras); 
+
+    } catch (err) {
+        console.error("Error de carga:", err);
+        status.innerHTML = "❌ Hubo un problema al conectar con Google Sheets. Verifica que la URL sea correcta.";
+    }
+}
+
+function renderizarTarjetas(datos) {
+    const container = document.getElementById('cards-container');
+    container.innerHTML = ""; 
+
+    datos.forEach((m, idx) => {
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('card-wrapper');
+
+        const fotoUrl = m.foto && m.foto !== "" 
+            ? m.foto 
+            : 'https://hely.com.co/mrb/tarjetas/assets/fotos/placeholder.png';
+
+        // Detectar columnas ignorando mayúsculas, minúsculas o tildes
+        const keyVirtual = Object.keys(m).find(k => k.toLowerCase().includes('virtual'));
+        const keyPresencial = Object.keys(m).find(k => k.toLowerCase().includes('presencial'));
+        
+        // ---------------------------------------------------------
+        // LOG DE DEPURACIÓN (Míralo en la consola con F12)
+        // ---------------------------------------------------------
+        if (idx === 0) {
+            console.log("🔎 ANALIZANDO LA PRIMERA MENTORA PARA DEPURAR:");
+            console.log("Objeto completo de Sheets:", m);
+            console.log(`Llave Virtual detectada: "${keyVirtual}" | Valor crudo:`, keyVirtual ? m[keyVirtual] : "NO ENCONTRADA");
+            console.log(`Llave Presencial detectada: "${keyPresencial}" | Valor crudo:`, keyPresencial ? m[keyPresencial] : "NO ENCONTRADA");
+        }
+        // ---------------------------------------------------------
+
+        const esVirtual = keyVirtual ? estaMarcado(m[keyVirtual]) : false;
+        const esPresencial = keyPresencial ? estaMarcado(m[keyPresencial]) : false;
+
+        if (esVirtual) wrapper.classList.add('virtual');
+        if (esPresencial) wrapper.classList.add('presencial');
+
+        let badgesHtml = '<div class="modalidad-container">';
+        if (esVirtual) badgesHtml += '<span class="badge badge-virtual">Virtual</span>';
+        if (esPresencial) badgesHtml += '<span class="badge badge-presencial">Presencial</span>';
+        badgesHtml += '</div>';
+
+        wrapper.innerHTML = `
+            <div class="mentora-card" id="card-${idx}">
+                <img src="plantilla-mentoras.png" class="card-bg-img" alt="Fondo Oficial">
+
+                <div class="avatar-container">
+                    <img 
+                        src="${fotoUrl}" 
+                        alt="${m.nombre}" 
+                        crossorigin="anonymous"
+                        onerror="this.src='https://hely.com.co/mrb/tarjetas/assets/fotos/placeholder.png'"
+                    >
+                </div>
+
+                <div class="white-content-box">
+                    <h2 class="mentora-name">${m.nombre || ''}</h2>
+                    <p class="mentora-profession">${m.profesion || ''}</p>
+                    <p class="mentora-charge">${m.cargo || ''}</p>
+                    <p class="mentora-profile">${m.perfil || ''}</p>
+                </div>
+            </div>
+
+            <button class="download-btn" onclick="downloadCard(${idx}, '${(m.nombre || 'Mentora').replace(/'/g, "\\'")}')">
+                📥 Descargar Tarjeta PNG
+            </button>
+        `;
+
+        container.appendChild(wrapper);
+    });
+}
+
+function filtrarMentoras(modalidad) {
+    document.querySelectorAll('.btn-filtro').forEach(btn => btn.classList.remove('activo'));
+    document.getElementById(`btn-${modalidad}`).classList.add('activo');
+
+    const tarjetas = document.querySelectorAll('.card-wrapper');
+
+    tarjetas.forEach(tarjeta => {
+        if (modalidad === 'todas') {
+            tarjeta.style.display = ''; 
+        } else if (modalidad === 'virtual') {
+            tarjeta.style.display = tarjeta.classList.contains('virtual') ? '' : 'none';
+        } else if (modalidad === 'presencial') {
+            tarjeta.style.display = tarjeta.classList.contains('presencial') ? '' : 'none';
+        }
+    });
+}
+
+function downloadCard(id, name) {
+    const card = document.getElementById(`card-${id}`);
+    document.fonts.ready.then(() => {
+        html2canvas(card, { scale: 2.5, useCORS: true, allowTaint: true, letterRendering: true }).then(canvas => {
+            const link = document.createElement('a');
+            const safeName = name ? name.replace(/[^a-zA-Z0-9]/g, '_') : 'Mentora';
+            link.download = `Tarjeta_Oficial_${safeName}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    });
+}
+
+async function descargarTodasPDF() {
+    const { jsPDF } = window.jspdf;
+    const btn = document.getElementById('btn-descargar-pdf');
+    const status = document.getElementById('status');
+    
+    // 1. Obtener todos los contenedores de las tarjetas
+    const wrappers = document.querySelectorAll('.card-wrapper');
+    
+    // 2. Filtrar SOLO los que están visibles
+    const tarjetasVisibles = Array.from(wrappers)
+        .filter(wrapper => wrapper.style.display !== 'none')
+        .map(wrapper => wrapper.querySelector('.mentora-card'));
+    
+    if (tarjetasVisibles.length === 0) {
+        alert("No hay tarjetas visibles para descargar.");
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = `⏳ Generando PDF con ${tarjetasVisibles.length} tarjetas...`;
+    
+    const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'px',
+        format: [470, 705]
+    });
+
+    try {
+        await document.fonts.ready;
+        await Promise.all(
+            Array.from(document.images)
+            .filter(img => !img.complete)
+            .map(img =>
+            new Promise(resolve => {
+                img.onload = resolve;
+                img.onerror = resolve;
+            })
+        )
+    );
+        
+
+        for (let i = 0; i < tarjetasVisibles.length; i++) {
+            // Actualizamos el texto
+            status.innerHTML = `Procesando tarjeta ${i + 1} de ${tarjetasVisibles.length}...`;
+            
+            // TRUCO DE RENDIMIENTO 1: 
+            // Hacemos una micropausa de 10ms para que el navegador "respire" 
+            // y pueda pintar el texto de progreso en la pantalla sin congelarse.
+            await new Promise(resolve => setTimeout(resolve, 10)); 
+            
+            // TRUCO DE RENDIMIENTO 2:
+            // Bajamos la escala a 1.5. Es un equilibrio perfecto entre velocidad y nitidez.
+            const canvas = await html2canvas(tarjetasVisibles[i], {
+                scale: 1, 
+                useCORS: true,
+                allowTaint: true
+            });
+
+            // TRUCO DE RENDIMIENTO 3:
+            // Cambiamos de PNG a JPEG con calidad del 80% (0.8). 
+            // Esto renderiza más rápido y evita que el PDF pese cientos de megabytes.
+            const imgData = canvas.toDataURL('image/jpeg', 0.8);
+
+            if (i > 0) {
+                pdf.addPage([470, 705], 'portrait');
+            }
+            
+            pdf.addImage(imgData, 'JPEG', 0, 0, 470, 705);
+        }
+
+        pdf.save("Tarjetas_Mentoras.pdf");
+        status.innerHTML = `✅ ¡PDF descargado con éxito (${tarjetasVisibles.length} tarjetas)!`;
+        
+    } catch (err) {
+        console.error("Error al generar PDF:", err);
+        status.innerHTML = `❌ Ocurrió un error al generar el PDF. Revisa la consola.`;
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = "📄 Descargar Visibles en PDF";
+    }
+}
+
+window.addEventListener('DOMContentLoaded', loadSheetData);
+</script>
+</body>
+</html>
