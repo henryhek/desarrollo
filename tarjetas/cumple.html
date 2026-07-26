@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Cumpleaños Mentoras | MRB</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+	<style>
+		:root {
+			--mrb-morado: #3d3366;
+			--mrb-fucsia: #b31c82;
+			--mrb-turquesa: #00b8bf;
+			--mrb-turquesa-dark: #0097a1;
+			--mrb-texto: #1f1f26;
+			--mrb-gris: #e8e8ed;
+			--mrb-fondo: #f7f7fa;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Montserrat', sans-serif;
+			background: radial-gradient(circle at 12% 8%, #ffffff 0%, #f8f8fc 36%, #f1f2f8 100%);
+			color: var(--mrb-texto);
+			min-height: 100vh;
+			padding: 24px;
+		}
+
+		.page-wrap {
+			width: min(1200px, 100%);
+			margin: 0 auto;
+		}
+
+		.toolbar {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 12px;
+			align-items: center;
+			justify-content: center;
+			margin-bottom: 18px;
+		}
+
+		.toolbar label {
+			font-weight: 700;
+			color: var(--mrb-morado);
+			font-size: 14px;
+			letter-spacing: .04em;
+			text-transform: uppercase;
+		}
+
+		.toolbar select,
+		.toolbar button {
+			border: 0;
+			border-radius: 10px;
+			padding: 10px 14px;
+			font-family: inherit;
+			font-weight: 700;
+			font-size: 14px;
+		}
+
+		.toolbar select {
+			background: #ffffff;
+			color: var(--mrb-morado);
+			box-shadow: 0 4px 16px rgba(61, 51, 102, 0.14);
+			min-width: 180px;
+		}
+
+		.toolbar button {
+			background: var(--mrb-fucsia);
+			color: white;
+			cursor: pointer;
+			box-shadow: 0 8px 18px rgba(179, 28, 130, 0.24);
+			transition: transform .2s ease, box-shadow .2s ease;
+		}
+
+		.toolbar button:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 12px 24px rgba(179, 28, 130, 0.28);
+		}
+
+		.status {
+			text-align: center;
+			margin: 0 0 18px;
+			color: var(--mrb-morado);
+			font-weight: 600;
+			min-height: 26px;
+		}
+
+		.poster {
+			width: min(760px, 100%);
+			margin: 0 auto;
+			background: linear-gradient(160deg, #ffffff 0%, #fcfcff 100%);
+			border-radius: 32px;
+			overflow: hidden;
+			border: 2px solid rgba(61, 51, 102, 0.16);
+			box-shadow: 0 20px 40px rgba(37, 33, 58, 0.16);
+			position: relative;
+		}
+
+		.poster::before,
+		.poster::after {
+			content: "";
+			position: absolute;
+			pointer-events: none;
+			z-index: 1;
+			width: 190px;
+			height: 190px;
+			background: radial-gradient(circle at 60% 40%, rgba(0, 184, 191, 0.34) 0%, rgba(0, 184, 191, 0) 70%);
+		}
+
+		.poster::before {
+			top: -45px;
+			left: -40px;
+		}
+
+		.poster::after {
+			bottom: -45px;
+			right: -40px;
+		}
+
+		.poster-header {
+			position: relative;
+			z-index: 2;
+			padding: 38px 34px 22px;
+			text-align: center;
+		}
+
+		.month-pill {
+			display: inline-block;
+			border: 2px solid rgba(61, 51, 102, 0.4);
+			border-radius: 16px;
+			padding: 10px 26px;
+			font-size: 46px;
+			line-height: 1;
+			font-weight: 500;
+			color: #151520;
+			margin-bottom: 18px;
+			text-transform: uppercase;
+			letter-spacing: .04em;
+			background: white;
+		}
+
+		.headline {
+			line-height: .94;
+			margin-bottom: 10px;
+		}
+
+		.headline .line-strong {
+			display: block;
+			font-size: 78px;
+			font-weight: 900;
+			color: #1f1f26;
+			text-transform: lowercase;
+		}
+
+		.headline .line-regular {
+			display: block;
+			font-size: 38px;
+			font-weight: 800;
+			color: #202028;
+			text-transform: lowercase;
+		}
+
+		.brand-mini {
+			font-size: 15px;
+			letter-spacing: .26em;
+			color: #515161;
+			text-transform: lowercase;
+			margin-bottom: 8px;
+		}
+
+		.grid-wrap {
+			position: relative;
+			z-index: 2;
+			margin: 0 24px;
+			border: 1px solid rgba(61, 51, 102, 0.28);
+			border-radius: 28px;
+			padding: 26px 20px 16px;
+			background: rgba(255, 255, 255, 0.72);
+			backdrop-filter: blur(2px);
+		}
+
+		.birthday-grid {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 14px 12px;
+		}
+
+		.birthday-card {
+			position: relative;
+			text-align: center;
+			min-height: 200px;
+		}
+
+		.birthday-day-bg {
+			position: absolute;
+			top: 16px;
+			left: 50%;
+			transform: translateX(-50%);
+			font-size: 100px;
+			font-weight: 900;
+			color: rgba(40, 40, 48, 0.08);
+			z-index: 1;
+			line-height: 1;
+			letter-spacing: -0.06em;
+			pointer-events: none;
+		}
+
+		.avatar {
+			width: 118px;
+			height: 118px;
+			border-radius: 18px;
+			object-fit: cover;
+			position: relative;
+			z-index: 2;
+			margin-top: 18px;
+			box-shadow: 0 10px 20px rgba(0, 0, 0, 0.16);
+			border: 2px solid #fff;
+		}
+
+		.day-chip {
+			position: absolute;
+			right: 10px;
+			top: 115px;
+			z-index: 3;
+			font-size: 44px;
+			font-weight: 900;
+			color: var(--mrb-turquesa);
+			text-shadow: -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 2px 2px 0 white;
+			line-height: 1;
+		}
+
+		.name {
+			margin-top: 8px;
+			position: relative;
+			z-index: 3;
+			font-size: 20px;
+			font-weight: 900;
+			text-transform: uppercase;
+			line-height: 1.04;
+			color: #171720;
+			letter-spacing: .01em;
+		}
+
+		.poster-footer {
+			position: relative;
+			z-index: 2;
+			text-align: center;
+			padding: 22px 28px 34px;
+		}
+
+		.poster-copy {
+			color: #2b2b38;
+			font-size: 35px;
+			line-height: 1.08;
+			margin-bottom: 18px;
+			font-weight: 500;
+		}
+
+		.poster-copy strong {
+			color: var(--mrb-fucsia);
+		}
+
+		.logo-block img {
+			width: 160px;
+			max-width: 100%;
+			display: inline-block;
+		}
+
+		.empty-state {
+			text-align: center;
+			padding: 40px 16px;
+			color: #5a5a66;
+			font-weight: 600;
+			font-size: 18px;
+		}
+
+		@media (max-width: 860px) {
+			body {
+				padding: 14px;
+			}
+
+			.poster-header {
+				padding: 24px 16px 16px;
+			}
+
+			.month-pill {
+				font-size: 34px;
+				border-radius: 12px;
+				padding: 8px 20px;
+			}
+
+			.headline .line-strong {
+				font-size: 48px;
+			}
+
+			.headline .line-regular {
+				font-size: 26px;
+			}
+
+			.brand-mini {
+				font-size: 12px;
+				letter-spacing: .18em;
+			}
+
+			.grid-wrap {
+				margin: 0 10px;
+				padding: 16px 10px 10px;
+				border-radius: 20px;
+			}
+
+			.birthday-grid {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+
+			.birthday-card {
+				min-height: 182px;
+			}
+
+			.birthday-day-bg {
+				font-size: 82px;
+				top: 20px;
+			}
+
+			.avatar {
+				width: 98px;
+				height: 98px;
+				border-radius: 14px;
+			}
+
+			.day-chip {
+				font-size: 34px;
+				top: 102px;
+				right: 4px;
+			}
+
+			.name {
+				font-size: 15px;
+			}
+
+			.poster-copy {
+				font-size: 24px;
+			}
+		}
+
+		@media (max-width: 520px) {
+			.birthday-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.birthday-card {
+				min-height: 168px;
+			}
+
+			.birthday-day-bg {
+				font-size: 78px;
+				top: 24px;
+			}
+
+			.day-chip {
+				top: 96px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="page-wrap">
+		<div class="toolbar">
+			<label for="mes-select">Mes</label>
+			<select id="mes-select"></select>
+			<button id="btn-descargar" type="button">Descargar mes en PNG</button>
+		</div>
+		<p class="status" id="status">Cargando mentoras...</p>
+
+		<section class="poster" id="poster">
+			<header class="poster-header">
+				<div class="month-pill" id="month-pill">ENERO</div>
+				<h1 class="headline">
+					<span class="line-strong">feliz</span>
+					<span class="line-regular">cumpleaños</span>
+				</h1>
+				<p class="brand-mini">mujeres rompiendo barreras</p>
+			</header>
+
+			<div class="grid-wrap">
+				<div class="birthday-grid" id="birthday-grid"></div>
+				<div class="empty-state" id="empty-state" hidden>No hay cumpleaños registrados para este mes.</div>
+			</div>
+
+			<footer class="poster-footer">
+				<p class="poster-copy">Celebramos el cumpleaños de nuestras afiliadas y de nuestro equipo <strong>MRB</strong>,<br>nos entusiasma compartir con ustedes este gran mes.</p>
+				<div class="logo-block">
+					<img src="../logo-mrb.png" alt="Logo Mujeres Rompiendo Barreras" onerror="this.src='../mrb-blanco.png'">
+				</div>
+			</footer>
+		</section>
+	</div>
+
+	<script>
+		const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxR4XEsqJm-muc1Hv6E4FoSFBVguBYYIbz273NcWdFZ1JdH-n2lf5_tGcJoaYZDjH-rsg/exec';
+
+		const MONTHS = [
+			'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+			'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+		];
+
+		const statusEl = document.getElementById('status');
+		const monthSelect = document.getElementById('mes-select');
+		const monthPill = document.getElementById('month-pill');
+		const gridEl = document.getElementById('birthday-grid');
+		const emptyEl = document.getElementById('empty-state');
+		const downloadBtn = document.getElementById('btn-descargar');
+
+		let mentorasCumple = [];
+
+		const quitarTildes = (txt = '') => txt
+			.normalize('NFD')
+			.replace(/[\u0300-\u036f]/g, '')
+			.toLowerCase()
+			.trim();
+
+		const limpiarNombre = (nombre = '') => String(nombre)
+			.replace(/\s+/g, ' ')
+			.trim();
+
+		function getValueByKey(row, posiblesLlaves) {
+			const keys = Object.keys(row);
+			const match = keys.find((k) => {
+				const keyNorm = quitarTildes(k);
+				return posiblesLlaves.some((candidate) => keyNorm === candidate || keyNorm.includes(candidate));
+			});
+			return match ? row[match] : '';
+		}
+
+		function mesTextoANumero(textoMes) {
+			const m = quitarTildes(textoMes);
+			if (!m) return null;
+			const idx = MONTHS.findIndex((mes) => mes.startsWith(m) || m.startsWith(mes));
+			return idx >= 0 ? idx + 1 : null;
+		}
+
+		function parseCumple(rawValue) {
+			if (!rawValue && rawValue !== 0) return null;
+			const value = String(rawValue).trim();
+			if (!value) return null;
+
+			// Soporta ISO datetime sin depender de Date para evitar corrimientos de zona horaria.
+			const isoDateTimeMatch = value.match(/^(\d{4})-(\d{1,2})-(\d{1,2})T/);
+			if (isoDateTimeMatch) {
+				const mes = Number(isoDateTimeMatch[2]);
+				const dia = Number(isoDateTimeMatch[3]);
+				if (mes >= 1 && mes <= 12 && dia >= 1 && dia <= 31) return { dia, mes };
+			}
+
+			const isoMatch = value.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})$/);
+			if (isoMatch) {
+				const mes = Number(isoMatch[2]);
+				const dia = Number(isoMatch[3]);
+				if (mes >= 1 && mes <= 12 && dia >= 1 && dia <= 31) return { dia, mes };
+			}
+
+			const latinNumeric = value.match(/^(\d{1,2})[-\/](\d{1,2})(?:[-\/](\d{2,4}))?$/);
+			if (latinNumeric) {
+				const dia = Number(latinNumeric[1]);
+				const mes = Number(latinNumeric[2]);
+				if (mes >= 1 && mes <= 12 && dia >= 1 && dia <= 31) return { dia, mes };
+			}
+
+			const dayTextMonth = value.match(/^(\d{1,2})\s*(?:de)?\s*([a-zA-ZáéíóúÁÉÍÓÚñÑ]+)$/);
+			if (dayTextMonth) {
+				const dia = Number(dayTextMonth[1]);
+				const mes = mesTextoANumero(dayTextMonth[2]);
+				if (mes && dia >= 1 && dia <= 31) return { dia, mes };
+			}
+
+			const textMonthDay = value.match(/^([a-zA-ZáéíóúÁÉÍÓÚñÑ]+)\s*(\d{1,2})$/);
+			if (textMonthDay) {
+				const mes = mesTextoANumero(textMonthDay[1]);
+				const dia = Number(textMonthDay[2]);
+				if (mes && dia >= 1 && dia <= 31) return { dia, mes };
+			}
+
+			return null;
+		}
+
+		function resolverFoto(fotoRaw) {
+			const fallback = 'assets/fotos/placeholder.png';
+			const foto = String(fotoRaw || '').trim();
+			if (!foto) return fallback;
+
+			if (/^https?:\/\//i.test(foto)) return foto;
+
+			const clean = foto.replace(/^\.?\//, '');
+
+			if (clean.includes('/')) return clean;
+
+			return `assets/fotos/${clean}`;
+		}
+
+		function normalizarMentora(row) {
+			const nombre = getValueByKey(row, ['nombre', 'mentora']);
+			const foto = getValueByKey(row, ['foto', 'fotos', 'imagen']);
+			const cumple = getValueByKey(row, ['cumple', 'cumpleanos', 'cumpleaños', 'fecha cumpleaños', 'fecha cumple']);
+
+			const fechaCumple = parseCumple(cumple);
+			if (!fechaCumple || !nombre) return null;
+
+			return {
+				nombre: limpiarNombre(nombre),
+				foto: resolverFoto(foto),
+				dia: fechaCumple.dia,
+				mes: fechaCumple.mes
+			};
+		}
+
+		function renderMes(mesNumero) {
+			const mesNombre = MONTHS[mesNumero - 1] || 'enero';
+			monthPill.textContent = mesNombre.toUpperCase();
+
+			const items = mentorasCumple
+				.filter((m) => m.mes === mesNumero)
+				.sort((a, b) => a.dia - b.dia || a.nombre.localeCompare(b.nombre, 'es'));
+
+			gridEl.innerHTML = '';
+
+			if (!items.length) {
+				emptyEl.hidden = false;
+				statusEl.textContent = `No se encontraron cumpleaños para ${mesNombre}.`;
+				return;
+			}
+
+			emptyEl.hidden = true;
+			statusEl.textContent = `${items.length} cumpleañera(s) para ${mesNombre}.`;
+
+			items.forEach((item) => {
+				const card = document.createElement('article');
+				card.className = 'birthday-card';
+				const dayText = String(item.dia).padStart(2, '0');
+				card.innerHTML = `
+					<span class="birthday-day-bg">${dayText}</span>
+					<img class="avatar" src="${item.foto}" alt="${item.nombre}" loading="lazy" onerror="this.src='assets/fotos/placeholder.png'">
+					<span class="day-chip">${item.dia}</span>
+					<h3 class="name">${item.nombre}</h3>
+				`;
+				gridEl.appendChild(card);
+			});
+		}
+
+		function inicializarMeses() {
+			monthSelect.innerHTML = MONTHS
+				.map((mes, idx) => `<option value="${idx + 1}">${mes.charAt(0).toUpperCase() + mes.slice(1)}</option>`)
+				.join('');
+
+			const mesActual = new Date().getMonth() + 1;
+			monthSelect.value = String(mesActual);
+			renderMes(mesActual);
+		}
+
+		async function cargarMentoras() {
+			try {
+				statusEl.textContent = 'Cargando mentoras desde Google Sheets...';
+				const response = await fetch(`${SCRIPT_URL}?t=${Date.now()}`);
+				if (!response.ok) {
+					throw new Error('No se pudo conectar con Google Sheets.');
+				}
+
+				const data = await response.json();
+				if (!Array.isArray(data)) {
+					throw new Error('La respuesta de la hoja no es un listado válido.');
+				}
+
+				mentorasCumple = data
+					.map(normalizarMentora)
+					.filter(Boolean);
+
+				if (!mentorasCumple.length) {
+					statusEl.textContent = 'No hay registros con columna cumple válida. Revisa formato (ej: 14/07 o 14 julio).';
+					inicializarMeses();
+					return;
+				}
+
+				inicializarMeses();
+			} catch (error) {
+				console.error(error);
+				statusEl.textContent = 'Error cargando datos. Verifica la URL del Apps Script y la columna cumple.';
+			}
+		}
+
+		monthSelect.addEventListener('change', () => {
+			renderMes(Number(monthSelect.value));
+		});
+
+		downloadBtn.addEventListener('click', async () => {
+			const poster = document.getElementById('poster');
+			const mesNombre = MONTHS[Number(monthSelect.value) - 1] || 'mes';
+
+			downloadBtn.disabled = true;
+			downloadBtn.textContent = 'Generando PNG...';
+
+			try {
+				await document.fonts.ready;
+				const canvas = await html2canvas(poster, {
+					scale: 2.6,
+					useCORS: true,
+					allowTaint: true,
+					backgroundColor: '#ffffff'
+				});
+
+				const link = document.createElement('a');
+				link.download = `cumple_mrb_${mesNombre}.png`;
+				link.href = canvas.toDataURL('image/png');
+				link.click();
+			} catch (error) {
+				console.error(error);
+				statusEl.textContent = 'No se pudo generar el PNG. Revisa que las imágenes estén accesibles.';
+			} finally {
+				downloadBtn.disabled = false;
+				downloadBtn.textContent = 'Descargar mes en PNG';
+			}
+		});
+
+		cargarMentoras();
+	</script>
+</body>
+</html>

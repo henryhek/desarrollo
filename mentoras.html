@@ -10,6 +10,7 @@
     <meta name="description" content="Match Mentee - Mentora de Mujeres Rompiendo Barreras 2024">
     <meta property="og:title" content="Mujeres Rompiendo Barreras">
     <meta property="og:description" content="Match Mentee - Mentora de Mujeres Rompiendo Barreras 2024">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
         /* Estilos de la paginación */
@@ -49,12 +50,12 @@
         /* ------------------------------------------------- */
 
         .container-match {
-            width: 90%;
+            width: 95%;
         }
 
         .card {
             width: 15rem;
-            height: 23rem;
+            height: 15rem;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -78,7 +79,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 7rem;
+            height: 5rem;
             padding: .3rem;
         }
 
@@ -99,7 +100,7 @@
 
         .card-container {
             flex-wrap: wrap;
-            width: 80%;
+            width: 95%;
             padding-bottom: 2rem;
             padding-top: 4rem; /* Reduje el padding-top para que no quede tan lejos del título */
             margin: 0 auto;
@@ -214,6 +215,28 @@
             background-color: #ccc;
             cursor: default;
         }
+
+        .controles {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .controles button {
+            background-color: #0097A1;
+            color: white;
+            border: none;
+            padding: .8rem 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .controles button.active {
+            background-color: #B31C82;
+        }
+
     </style>
     
     <div id="image-preload" style="display: none;"></div>
@@ -225,6 +248,13 @@
                 <img src="logo-mrb-white.svg" class="logo" alt="">
             
             <h4>Mentoras 2026</h4>
+        </div>
+
+        <div class="controles">
+            <button id="filter-all" class="active">Todas</button>
+            <button id="filter-presencial">Presencial</button>
+            <button id="filter-virtual">Virtual</button>
+            <button id="download-btn">Descargar</button>
         </div>
         
         <div class="card-container" id="card-container">
@@ -244,6 +274,7 @@
     <script>
     </script>
     <script src="js/script.js"></script>
+    <script src="js/mentoras.js?v=1.9"></script>
     <script src="js/basementoras.js?v=1.8"></script>
 </body>
 
