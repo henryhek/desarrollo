@@ -231,10 +231,19 @@
 			border: 2px solid #fff;
 		}
 
-		.day-chip {
-			position: absolute;
-			right: 10px;
+
+        .card-date {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            right: 20px;
 			top: 5px;
+            flex-direction: column;
+
+        }
+		.day-chip {
+			position: relative;
 			z-index: 3;
 			font-size: 44px;
 			font-weight: 900;
@@ -242,6 +251,16 @@
 			text-shadow: -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 2px 2px 0 white;
 			line-height: 1;
 		}
+        .card-month {
+			position: relative;
+			z-index: 3;
+			font-size: 1.2rem;
+			font-weight: 900;
+			color: var(--mrb-turquesa);
+			text-shadow: -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 2px 2px 0 white;
+			line-height: 1;
+		}
+
  
 		.name {
 			margin-top: 8px;
@@ -264,7 +283,7 @@
 
 		.poster-copy {
 			color: #2b2b38;
-			font-size: 35px;
+			font-size: 1.5rem;
 			line-height: 1.08;
 			margin-bottom: 18px;
 			font-weight: 500;
@@ -403,7 +422,8 @@
 			</div>
 
 			<footer class="poster-footer">
-				<p class="poster-copy">Celebramos el cumpleaños de nuestras afiliadas y de nuestro equipo <strong>MRB</strong>,<br>nos entusiasma compartir con ustedes este gran mes.</p>
+				<p class="poster-copy">Un reconocimiento muy especial a nuestras mentoras que estuvieron de cumpleaños en meses pasados.<br>
+                    <strong>¡Gracias por inspirar, transformar y seguir dejando huella en MRB!</strong></p>
 				<div class="logo-block">
 					<img src="../logo-mrb.png" alt="Logo Mujeres Rompiendo Barreras" onerror="this.src='../mrb-blanco.png'">
 				</div>
@@ -565,14 +585,26 @@
 			emptyEl.hidden = true;
 			statusEl.textContent = `${items.length} cumpleañera(s) para ${tituloRango.toLowerCase()}.`;
 
+			const esRangoMultiple = mesDesde !== mesHasta;
+
 			items.forEach((item) => {
 				const card = document.createElement('article');
 				card.className = 'birthday-card';
-				const dayText = String(item.dia).padStart(2, '0');
+				
+				let mesAbbrHtml = '';
+				if (esRangoMultiple) {
+					const mesAbbr = MONTHS[item.mes - 1].substring(0, 3);
+					mesAbbrHtml = `<span class="card-month">${mesAbbr}</span>`;
+				}
+
 				card.innerHTML = `
-					<span class="birthday-day-bg">${dayText}</span>
-					<img class="avatar" src="${item.foto}" alt="${item.nombre}" loading="lazy" onerror="this.src='assets/fotos/placeholder.png'">
-					<span class="day-chip">${item.dia}</span>
+					<div class="card-photo">
+						<img class="avatar" src="${item.foto}" alt="${item.nombre}" loading="lazy" onerror="this.src='assets/fotos/placeholder.png'">
+						<div class="card-date">
+							<span class="day-chip">${item.dia}</span>
+							${mesAbbrHtml}
+						</div>
+					</div>
 					<h3 class="name">${item.nombre}</h3>
 				`;
 				gridEl.appendChild(card);
