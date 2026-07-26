@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Plantilla Mentoras | MRB</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+	<style>
+		:root {
+			--page-bg-1: #ffffff;
+			--page-bg-2: #f6f5fb;
+			--page-bg-3: #ece9f8;
+			--poster-start: #43376f;
+			--poster-end: #3a2f63;
+			--card-title-bg: #b31c82;
+			--card-shell-bg: rgba(255, 255, 255, 0.08);
+			--photo-shell-bg: rgba(255, 255, 255, 0.2);
+			--text-light: #ffffff;
+			--poster-text: #ffffff;
+			--status-text: #3d3366;
+			--toolbar-bg: #ffffff;
+			--toolbar-text: #30294a;
+			--grid-cols: 6;
+			--grid-gap: 14px;
+			--caption-min-h: 113px;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Montserrat', sans-serif;
+			background:
+				radial-gradient(circle at 8% 8%, var(--page-bg-1) 0%, rgba(255, 255, 255, 0.2) 28%, transparent 45%),
+				linear-gradient(180deg, var(--page-bg-1) 0%, var(--page-bg-2) 40%, var(--page-bg-3) 100%);
+			padding: 20px;
+			min-height: 100vh;
+			color: #1c1630;
+		}
+
+		.app {
+			max-width: 1260px;
+			margin: 0 auto;
+		}
+
+		.toolbar {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 10px;
+			padding: 14px;
+			margin-bottom: 14px;
+			border-radius: 12px;
+			background: var(--toolbar-bg);
+			box-shadow: 0 10px 26px rgba(44, 35, 77, 0.12);
+		}
+
+		.toolbar label {
+			font-size: 12px;
+			font-weight: 700;
+			color: var(--toolbar-text);
+			letter-spacing: 0.03em;
+			text-transform: uppercase;
+			align-self: center;
+		}
+
+		.toolbar select,
+		.toolbar button,
+		.toolbar input[type="color"] {
+			font-family: inherit;
+			font-weight: 700;
+			border-radius: 10px;
+			border: 1px solid rgba(60, 52, 95, 0.18);
+			height: 40px;
+		}
+
+		.toolbar select {
+			padding: 0 12px;
+			color: #2b2350;
+			background: #ffffff;
+		}
+
+		.toolbar input[type="color"] {
+			width: 48px;
+			padding: 4px;
+			background: #fff;
+		}
+
+		.toolbar button {
+			border: 0;
+			padding: 0 14px;
+			cursor: pointer;
+			color: white;
+			background: #b31c82;
+			box-shadow: 0 10px 20px rgba(179, 28, 130, 0.22);
+			transition: transform .2s ease, box-shadow .2s ease;
+		}
+
+		.toolbar button.secondary {
+			background: #4f4583;
+			box-shadow: 0 10px 20px rgba(79, 69, 131, 0.24);
+		}
+
+		.toolbar button:hover {
+			transform: translateY(-1px);
+		}
+
+		.toolbar button:disabled {
+			opacity: .55;
+			cursor: not-allowed;
+			transform: none;
+		}
+
+		.status {
+			text-align: center;
+			font-size: 14px;
+			font-weight: 600;
+			color: var(--status-text);
+			min-height: 24px;
+			margin-bottom: 12px;
+		}
+
+		.poster {
+			width: min(1120px, 100%);
+			margin: 0 auto;
+			border-radius: 12px;
+			background: linear-gradient(160deg, var(--poster-start) 0%, var(--poster-end) 100%);
+			padding: 22px 20px 24px;
+			box-shadow: 0 22px 38px rgba(40, 30, 71, 0.25);
+		}
+
+		.poster-header {
+			text-align: center;
+			margin-bottom: 18px;
+		}
+
+		.logo {
+			display: block;
+			width: 130px;
+			margin: 0 auto 8px;
+		}
+
+		.poster-title {
+			font-size: 38px;
+			font-weight: 800;
+			color: var(--poster-text);
+			line-height: 1;
+			letter-spacing: .01em;
+		}
+
+		.poster-grid {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-content: flex-start;
+			gap: var(--grid-gap);
+		}
+
+		.mentor-card {
+			background: var(--card-shell-bg);
+			border-radius: 8px;
+			overflow: hidden;
+			backdrop-filter: blur(2px);
+			flex: 0 1 calc((100% - (var(--grid-cols) - 1) * var(--grid-gap)) / var(--grid-cols));
+			max-width: calc((100% - (var(--grid-cols) - 1) * var(--grid-gap)) / var(--grid-cols));
+		}
+
+		.mentor-photo-wrap {
+			aspect-ratio: 1 / 1;
+			background: var(--photo-shell-bg);
+		}
+
+		.mentor-photo {
+			width: 100%;
+			height: 100%;
+			display: block;
+			object-fit: cover;
+		}
+
+		.mentor-caption {
+			background: var(--card-title-bg);
+			padding: 10px 8px 12px;
+			text-align: center;
+			min-height: var(--caption-min-h);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			gap: 6px;
+		}
+
+		.mentor-name {
+			color: var(--text-light);
+			font-size: .9rem;
+			font-weight: 800;
+			line-height: 1.1;
+		}
+
+		.mentor-profession {
+			color: rgba(255, 255, 255, 0.95);
+			font-size: 11px;
+			font-weight: 500;
+			line-height: 1.2;
+		}
+
+		.poster-footer {
+			text-align: center;
+			margin-top: 16px;
+			font-size: 32px;
+			font-weight: 800;
+			color: var(--poster-text);
+		}
+
+		.pagination {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 10px;
+			margin-top: 14px;
+		}
+
+		.pagination button {
+			font-family: inherit;
+			font-weight: 700;
+			border: 0;
+			color: #ffffff;
+			background: #4f4583;
+			padding: 8px 14px;
+			border-radius: 8px;
+			cursor: pointer;
+		}
+
+		.pagination button:disabled {
+			opacity: .4;
+			cursor: not-allowed;
+		}
+
+		.page-indicator {
+			color: #2d2550;
+			font-weight: 700;
+		}
+
+		.empty-state {
+			text-align: center;
+			padding: 28px 12px;
+			color: var(--poster-text);
+			font-weight: 600;
+			grid-column: 1 / -1;
+		}
+
+		@media (max-width: 1120px) {
+			.poster-grid {
+				--grid-cols: 4;
+			}
+
+			.mentor-name {
+				font-size: 20px;
+			}
+		}
+
+		@media (max-width: 760px) {
+			body {
+				padding: 12px;
+			}
+
+			.poster {
+				padding: 16px 10px 14px;
+			}
+
+			.poster-title {
+				font-size: 30px;
+			}
+
+			.poster-grid {
+				--grid-cols: 2;
+				--grid-gap: 10px;
+				--caption-min-h: 78px;
+			}
+
+			.mentor-caption {
+				padding: 8px 6px;
+			}
+
+			.mentor-name {
+				font-size: 18px;
+			}
+
+			.poster-footer {
+				font-size: 24px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="app">
+		<div class="toolbar">
+			<label for="bg-theme">Color fondo</label>
+			<select id="bg-theme">
+				<option value="morado" selected>Morado</option>
+				<option value="fucsia">Fucsia</option>
+				<option value="blanco-gradient">Blanco con gradient</option>
+			</select>
+
+			<label for="cards-per-page">Fotos por pagina</label>
+			<select id="cards-per-page">
+				<option value="6">6</option>
+				<option value="8" selected>8</option>
+				<option value="10">10</option>
+				<option value="12">12</option>
+				<option value="15">15</option>
+				<option value="18">18</option>
+			</select>
+
+			<button id="btn-download-current" type="button">Descargar pagina actual</button>
+			<button id="btn-download-all" class="secondary" type="button">Descargar todas las paginas</button>
+		</div>
+
+		<p id="status" class="status">Cargando mentoras...</p>
+
+		<section class="poster" id="poster">
+			<header class="poster-header">
+				<img class="logo" src="../mrb-blanco.png" alt="Mujeres Rompiendo Barreras" onerror="this.src='../logo-mrb.png'">
+				<h1 class="poster-title">Mentoras</h1>
+			</header>
+
+			<div id="poster-grid" class="poster-grid"></div>
+			<p id="poster-empty" class="empty-state" hidden>No hay mentoras para mostrar.</p>
+
+			<footer class="poster-footer">Mentoras 2026</footer>
+		</section>
+
+		<div class="pagination">
+			<button id="prev-page" type="button">Anterior</button>
+			<span id="page-indicator" class="page-indicator">Pagina 1 de 1</span>
+			<button id="next-page" type="button">Siguiente</button>
+		</div>
+	</div>
+
+	<script>
+		const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxR4XEsqJm-muc1Hv6E4FoSFBVguBYYIbz273NcWdFZ1JdH-n2lf5_tGcJoaYZDjH-rsg/exec';
+
+		const THEMES = {
+			morado: {
+				page1: '#ffffff',
+				page2: '#f6f5fb',
+				page3: '#ece9f8',
+				posterStart: '#43376f',
+				posterEnd: '#3a2f63',
+				posterText: '#ffffff',
+				statusText: '#3d3366',
+				cardShellBg: 'rgba(255, 255, 255, 0.08)',
+				photoShellBg: 'rgba(255, 255, 255, 0.2)'
+			},
+			fucsia: {
+				page1: '#ffffff',
+				page2: '#fdf6fb',
+				page3: '#f8e9f2',
+				posterStart: '#b31c82',
+				posterEnd: '#94146b',
+				posterText: '#ffffff',
+				statusText: '#7d285f',
+				cardShellBg: 'rgba(255, 255, 255, 0.1)',
+				photoShellBg: 'rgba(255, 255, 255, 0.24)'
+			},
+			'blanco-gradient': {
+				page1: '#ffffff',
+				page2: '#f8f8fc',
+				page3: '#f1f2f8',
+				posterStart: '#ffffff',
+				posterEnd: '#fcfcff',
+				posterText: '#3d3366',
+				statusText: '#3d3366',
+				cardShellBg: 'rgba(61, 51, 102, 0.06)',
+				photoShellBg: 'rgba(61, 51, 102, 0.1)'
+			}
+		};
+
+		const statusEl = document.getElementById('status');
+		const bgThemeSelect = document.getElementById('bg-theme');
+		const cardsPerPageSelect = document.getElementById('cards-per-page');
+		const posterGridEl = document.getElementById('poster-grid');
+		const posterEmptyEl = document.getElementById('poster-empty');
+		const pageIndicatorEl = document.getElementById('page-indicator');
+		const prevPageBtn = document.getElementById('prev-page');
+		const nextPageBtn = document.getElementById('next-page');
+		const downloadCurrentBtn = document.getElementById('btn-download-current');
+		const downloadAllBtn = document.getElementById('btn-download-all');
+		const posterEl = document.getElementById('poster');
+
+		let mentoras = [];
+		let currentPage = 1;
+		let cardsPerPage = Number(cardsPerPageSelect.value);
+
+		const quitarTildes = (txt = '') => String(txt)
+			.normalize('NFD')
+			.replace(/[\u0300-\u036f]/g, '')
+			.toLowerCase()
+			.trim();
+
+		function getValueByKey(row, posiblesLlaves) {
+			const keys = Object.keys(row || {});
+			const found = keys.find((key) => {
+				const normalized = quitarTildes(key);
+				return posiblesLlaves.some((candidate) => normalized === candidate || normalized.includes(candidate));
+			});
+
+			return found ? row[found] : '';
+		}
+
+		function resolverFoto(fotoRaw) {
+			const fallback = 'assets/fotos/placeholder.png';
+			const foto = String(fotoRaw || '').trim();
+			if (!foto) return fallback;
+
+			if (/^https?:\/\//i.test(foto)) return foto;
+
+			const clean = foto.replace(/^\.?\//, '');
+			if (clean.startsWith('tarjetas/')) return clean.replace('tarjetas/', '');
+			if (clean.includes('/')) return clean;
+
+			return `assets/fotos/${clean}`;
+		}
+
+		function normalizeMentora(row) {
+			const nombre = getValueByKey(row, ['nombre', 'mentora']);
+			const profesion = getValueByKey(row, ['profesion', 'profesion', 'cargo', 'ocupacion', 'empresa-cargo', 'empresa_cargo']);
+			const foto = getValueByKey(row, ['foto', 'fotos', 'imagen']);
+
+			if (!String(nombre || '').trim()) return null;
+
+			return {
+				nombre: String(nombre).trim(),
+				profesion: String(profesion || '').trim(),
+				foto: resolverFoto(foto)
+			};
+		}
+
+		function applyTheme(themeName) {
+			const theme = THEMES[themeName] || THEMES.morado;
+			document.documentElement.style.setProperty('--page-bg-1', theme.page1);
+			document.documentElement.style.setProperty('--page-bg-2', theme.page2);
+			document.documentElement.style.setProperty('--page-bg-3', theme.page3);
+			document.documentElement.style.setProperty('--poster-start', theme.posterStart);
+			document.documentElement.style.setProperty('--poster-end', theme.posterEnd);
+			document.documentElement.style.setProperty('--poster-text', theme.posterText);
+			document.documentElement.style.setProperty('--status-text', theme.statusText);
+			document.documentElement.style.setProperty('--card-shell-bg', theme.cardShellBg);
+			document.documentElement.style.setProperty('--photo-shell-bg', theme.photoShellBg);
+		}
+
+		function totalPages() {
+			return Math.max(1, Math.ceil(mentoras.length / cardsPerPage));
+		}
+
+		function getCurrentPageItems() {
+			const start = (currentPage - 1) * cardsPerPage;
+			return mentoras.slice(start, start + cardsPerPage);
+		}
+
+		function updateGridMinHeight() {
+			const styles = getComputedStyle(posterGridEl);
+			const cols = Math.max(1, parseInt(styles.getPropertyValue('--grid-cols'), 10) || 1);
+			const gap = parseFloat(styles.getPropertyValue('--grid-gap')) || 0;
+			const captionMinHeight = parseFloat(styles.getPropertyValue('--caption-min-h')) || 113;
+			const rows = Math.max(1, Math.ceil(cardsPerPage / cols));
+
+			const availableWidth = posterGridEl.clientWidth;
+			const cardWidth = (availableWidth - gap * (cols - 1)) / cols;
+			const cardHeight = cardWidth + captionMinHeight;
+			const minHeight = rows * cardHeight + gap * (rows - 1);
+
+			posterGridEl.style.minHeight = `${Math.max(0, Math.ceil(minHeight))}px`;
+		}
+
+		function render() {
+			const pages = totalPages();
+			if (currentPage > pages) currentPage = pages;
+
+			const pageItems = getCurrentPageItems();
+			posterGridEl.innerHTML = '';
+
+			if (!pageItems.length) {
+				posterEmptyEl.hidden = false;
+				pageIndicatorEl.textContent = 'Pagina 1 de 1';
+				prevPageBtn.disabled = true;
+				nextPageBtn.disabled = true;
+				statusEl.textContent = 'No hay mentoras disponibles en el Sheet.';
+				return;
+			}
+
+			posterEmptyEl.hidden = true;
+			pageItems.forEach((item) => {
+				const card = document.createElement('article');
+				card.className = 'mentor-card';
+
+				const safeName = escapeHtml(item.nombre);
+				const safeProfession = escapeHtml(item.profesion || 'Profesion no definida');
+
+				card.innerHTML = `
+					<div class="mentor-photo-wrap">
+						<img class="mentor-photo" src="${item.foto}" alt="${safeName}" loading="lazy" onerror="this.src='assets/fotos/placeholder.png'">
+					</div>
+					<div class="mentor-caption">
+						<h3 class="mentor-name">${safeName}</h3>
+						<p class="mentor-profession">${safeProfession}</p>
+					</div>
+				`;
+				posterGridEl.appendChild(card);
+			});
+
+			updateGridMinHeight();
+
+			pageIndicatorEl.textContent = `Pagina ${currentPage} de ${pages}`;
+			prevPageBtn.disabled = currentPage <= 1;
+			nextPageBtn.disabled = currentPage >= pages;
+			statusEl.textContent = `${mentoras.length} mentoras cargadas. Mostrando ${pageItems.length} por pagina.`;
+		}
+
+		function escapeHtml(value) {
+			return String(value)
+				.replace(/&/g, '&amp;')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;')
+				.replace(/"/g, '&quot;')
+				.replace(/'/g, '&#39;');
+		}
+
+		function fileNameForPage(page) {
+			return `mentoras_2026_pagina_${String(page).padStart(2, '0')}.png`;
+		}
+
+		function triggerDownload(canvas, fileName) {
+			const link = document.createElement('a');
+			link.download = fileName;
+			link.href = canvas.toDataURL('image/png');
+			link.click();
+		}
+
+		async function exportCurrentPage(pageNumber = currentPage) {
+			await document.fonts.ready;
+			const canvas = await html2canvas(posterEl, {
+				scale: 2.4,
+				useCORS: true,
+				allowTaint: true,
+				backgroundColor: null
+			});
+			triggerDownload(canvas, fileNameForPage(pageNumber));
+		}
+
+		function waitForFrame() {
+			return new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+		}
+
+		async function exportAllPages() {
+			const pages = totalPages();
+			if (!mentoras.length) return;
+
+			const previousPage = currentPage;
+			downloadAllBtn.disabled = true;
+			downloadCurrentBtn.disabled = true;
+			downloadAllBtn.textContent = 'Generando...';
+			statusEl.textContent = `Exportando ${pages} pagina(s)...`;
+
+			try {
+				for (let page = 1; page <= pages; page += 1) {
+					currentPage = page;
+					render();
+					await waitForFrame();
+					await exportCurrentPage(page);
+				}
+			} finally {
+				currentPage = previousPage;
+				render();
+				downloadAllBtn.disabled = false;
+				downloadCurrentBtn.disabled = false;
+				downloadAllBtn.textContent = 'Descargar todas las paginas';
+			}
+		}
+
+		async function loadData() {
+			try {
+				statusEl.textContent = 'Cargando mentoras desde Google Sheets...';
+				const response = await fetch(`${SCRIPT_URL}?t=${Date.now()}`);
+				if (!response.ok) {
+					throw new Error('No se pudo conectar con Google Sheets.');
+				}
+
+				const data = await response.json();
+				if (!Array.isArray(data)) {
+					throw new Error('La respuesta del Sheet no es un arreglo.');
+				}
+
+				mentoras = data
+					.map(normalizeMentora)
+					.filter(Boolean)
+					.sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+
+				currentPage = 1;
+				render();
+			} catch (error) {
+				console.error(error);
+				statusEl.textContent = 'Error cargando datos. Verifica la URL del Apps Script y columnas nombre/foto/profesion.';
+			}
+		}
+
+		bgThemeSelect.addEventListener('change', () => {
+			applyTheme(bgThemeSelect.value);
+		});
+
+		cardsPerPageSelect.addEventListener('change', () => {
+			cardsPerPage = Math.max(1, Number(cardsPerPageSelect.value) || 8);
+			currentPage = 1;
+			render();
+		});
+
+		prevPageBtn.addEventListener('click', () => {
+			currentPage = Math.max(1, currentPage - 1);
+			render();
+		});
+
+		nextPageBtn.addEventListener('click', () => {
+			currentPage = Math.min(totalPages(), currentPage + 1);
+			render();
+		});
+
+		window.addEventListener('resize', () => {
+			updateGridMinHeight();
+		});
+
+		downloadCurrentBtn.addEventListener('click', async () => {
+			if (!mentoras.length) return;
+			downloadCurrentBtn.disabled = true;
+			const originalText = downloadCurrentBtn.textContent;
+			downloadCurrentBtn.textContent = 'Generando...';
+
+			try {
+				await exportCurrentPage(currentPage);
+			} catch (error) {
+				console.error(error);
+				statusEl.textContent = 'No se pudo descargar la pagina actual. Revisa que las imagenes sean accesibles.';
+			} finally {
+				downloadCurrentBtn.textContent = originalText;
+				downloadCurrentBtn.disabled = false;
+			}
+		});
+
+		downloadAllBtn.addEventListener('click', async () => {
+			try {
+				await exportAllPages();
+			} catch (error) {
+				console.error(error);
+				statusEl.textContent = 'No se pudieron exportar todas las paginas.';
+			}
+		});
+
+		applyTheme('morado');
+		loadData();
+	</script>
+</body>
+</html>
