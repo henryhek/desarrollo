@@ -17,6 +17,14 @@
 			--mrb-texto: #1f1f26;
 			--mrb-gris: #e8e8ed;
 			--mrb-fondo: #f7f7fa;
+			--page-bg-1: #ffffff;
+			--page-bg-2: #f8f8fc;
+			--page-bg-3: #f1f2f8;
+			--poster-start: #ffffff;
+			--poster-end: #fcfcff;
+			--poster-glow-rgb: 0, 184, 191;
+			--poster-glow-alpha: 0.20;
+			--grid-bg: rgba(255, 255, 255, 0.72);
 		}
 
 		* {
@@ -27,7 +35,7 @@
 
 		body {
 			font-family: 'Montserrat', sans-serif;
-			background: radial-gradient(circle at 12% 8%, #ffffff 0%, #f8f8fc 36%, #f1f2f8 100%);
+			background: radial-gradient(circle at 12% 8%, var(--page-bg-1) 0%, var(--page-bg-2) 36%, var(--page-bg-3) 100%);
 			color: var(--mrb-texto);
 			min-height: 100vh;
 			padding: 24px;
@@ -91,6 +99,39 @@
 			box-shadow: 0 12px 24px rgba(179, 28, 130, 0.28);
 		}
 
+		.message-controls {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			justify-content: center;
+			align-items: center;
+			margin: 0 auto 18px;
+			max-width: 980px;
+		}
+
+		.message-controls select,
+		.message-controls textarea {
+			font-family: inherit;
+			border-radius: 10px;
+			border: 1px solid rgba(61, 51, 102, 0.26);
+			padding: 10px 12px;
+			box-shadow: 0 4px 12px rgba(61, 51, 102, 0.08);
+		}
+
+		.message-controls select {
+			min-width: 280px;
+			font-weight: 600;
+			color: var(--mrb-morado);
+		}
+
+		.message-controls textarea {
+			width: min(760px, 100%);
+			resize: vertical;
+			min-height: 76px;
+			font-size: 14px;
+			line-height: 1.35;
+		}
+
 		.status {
 			text-align: center;
 			margin: 0 0 18px;
@@ -102,7 +143,7 @@
 		.poster {
 			width: min(1024px, 100%);
 			margin: 0 auto;
-			background: linear-gradient(160deg, #ffffff 0%, #fcfcff 100%);
+			background: linear-gradient(160deg, var(--poster-start) 0%, var(--poster-end) 100%);
 			border-radius: 32px;
 			overflow: hidden;
 			border: 2px solid rgba(61, 51, 102, 0.16);
@@ -118,7 +159,7 @@
 			z-index: 1;
 			width: 190px;
 			height: 190px;
-			background: radial-gradient(circle at 60% 40%, rgba(0, 184, 191, 0.34) 0%, rgba(0, 184, 191, 0) 70%);
+			background: radial-gradient(circle at 60% 40%, rgba(var(--poster-glow-rgb), var(--poster-glow-alpha)) 0%, rgba(var(--poster-glow-rgb), 0) 70%);
 		}
 
 		.poster::before {
@@ -186,20 +227,43 @@
 			border: 1px solid rgba(61, 51, 102, 0.28);
 			border-radius: 28px;
 			padding: 26px 20px 16px;
-			background: rgba(255, 255, 255, 0.72);
+			background: var(--grid-bg);
 			backdrop-filter: blur(2px);
 		}
 
 		.birthday-grid {
-			display: grid;
-			grid-template-columns: repeat(4, minmax(0, 1fr));
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
 			gap: 14px 12px;
 		}
 
 		.birthday-card {
 			position: relative;
 			text-align: center;
+			flex: 0 1 calc((100% - 24px) / 3);
+			max-width: 220px;
 			min-height: 200px;
+		}
+
+		.birthday-grid.few-1 .birthday-card {
+			flex-basis: 420px;
+			max-width: 420px;
+		}
+
+		.birthday-grid.few-2 .birthday-card {
+			flex-basis: 330px;
+			max-width: 330px;
+		}
+
+		.birthday-grid.few-3 .birthday-card {
+			flex-basis: 280px;
+			max-width: 280px;
+		}
+
+		.birthday-grid.few-4 .birthday-card {
+			flex-basis: calc((100% - 12px) / 2);
+			max-width: 300px;
 		}
 
 		.birthday-day-bg {
@@ -339,11 +403,21 @@
 			}
 
 			.birthday-grid {
-				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 14px 10px;
 			}
 
 			.birthday-card {
+				flex-basis: calc((100% - 10px) / 2);
+				max-width: 250px;
 				min-height: 182px;
+			}
+
+			.birthday-grid.few-1 .birthday-card,
+			.birthday-grid.few-2 .birthday-card,
+			.birthday-grid.few-3 .birthday-card,
+			.birthday-grid.few-4 .birthday-card {
+				flex-basis: calc((100% - 10px) / 2);
+				max-width: 250px;
 			}
 
 			.birthday-day-bg {
@@ -374,10 +448,12 @@
 
 		@media (max-width: 520px) {
 			.birthday-grid {
-				grid-template-columns: 1fr;
+				gap: 12px;
 			}
 
 			.birthday-card {
+				flex-basis: 100%;
+				max-width: 320px;
 				min-height: 168px;
 			}
 
@@ -399,8 +475,28 @@
 			<select id="mes-desde"></select>
 			<span class="range-sep">a</span>
 			<select id="mes-hasta"></select>
+			<label for="tema-fondo">Fondo</label>
+			<select id="tema-fondo">
+				<option value="neutro">Neutro</option>
+				<option value="morado">Morado sutil</option>
+				<option value="fucsia">Fucsia sutil</option>
+				<option value="turquesa">Turquesa sutil</option>
+			</select>
 			<button id="btn-descargar" type="button">Descargar rango en PNG</button>
 		</div>
+
+		<div class="message-controls">
+			<label for="mensaje-select">Mensaje</label>
+			<select id="mensaje-select">
+				<option value="actual">Reconocimiento especial</option>
+				<option value="inspirar">Gracias por inspirar</option>
+				<option value="comunidad">Gracias por ser parte de MRB</option>
+				<option value="liderazgo">Celebramos su liderazgo</option>
+				<option value="custom">Personalizado</option>
+			</select>
+			<textarea id="mensaje-custom" placeholder="Escribe tu mensaje personalizado" hidden></textarea>
+		</div>
+
 		<p class="status" id="status">Cargando mentoras...</p>
 
 		<section class="poster" id="poster">
@@ -419,8 +515,8 @@
 			</div>
 
 			<footer class="poster-footer">
-				<p class="poster-copy">Un reconocimiento muy especial a nuestras mentoras que estuvieron de cumpleaños en meses pasados.<br>
-                    <strong>¡Gracias por inspirar, transformar y seguir dejando huella en MRB!</strong></p>
+				<p class="poster-copy" id="poster-copy">Un reconocimiento muy especial a nuestras mentoras que estuvieron de cumpleaños en meses pasados.<br>
+					<strong>¡Gracias por inspirar, transformar y seguir dejando huella en MRB!</strong></p>
 				<div class="logo-block">
 					<img src="../logo-mrb.png" alt="Logo Mujeres Rompiendo Barreras" onerror="this.src='../mrb-blanco.png'">
 				</div>
@@ -442,9 +538,63 @@
 		const monthPill = document.getElementById('month-pill');
 		const gridEl = document.getElementById('birthday-grid');
 		const emptyEl = document.getElementById('empty-state');
+		const themeSelect = document.getElementById('tema-fondo');
+		const messageSelect = document.getElementById('mensaje-select');
+		const customMessageInput = document.getElementById('mensaje-custom');
+		const posterCopyEl = document.getElementById('poster-copy');
 		const downloadBtn = document.getElementById('btn-descargar');
 
 		let mentorasCumple = [];
+
+		const THEMES = {
+			neutro: {
+				page1: '#ffffff',
+				page2: '#f8f8fc',
+				page3: '#f1f2f8',
+				posterStart: '#ffffff',
+				posterEnd: '#fcfcff',
+				glowRgb: '0, 184, 191',
+				glowAlpha: '0.18',
+				gridBg: 'rgba(255, 255, 255, 0.72)'
+			},
+			morado: {
+				page1: '#ffffff',
+				page2: '#f6f5fb',
+				page3: '#eeecf7',
+				posterStart: '#ffffff',
+				posterEnd: '#faf8ff',
+				glowRgb: '61, 51, 102',
+				glowAlpha: '0.14',
+				gridBg: 'rgba(255, 255, 255, 0.74)'
+			},
+			fucsia: {
+				page1: '#ffffff',
+				page2: '#fdf7fb',
+				page3: '#f8edf4',
+				posterStart: '#ffffff',
+				posterEnd: '#fff8fd',
+				glowRgb: '179, 28, 130',
+				glowAlpha: '0.12',
+				gridBg: 'rgba(255, 255, 255, 0.74)'
+			},
+			turquesa: {
+				page1: '#ffffff',
+				page2: '#f5fcfd',
+				page3: '#ebf6f7',
+				posterStart: '#ffffff',
+				posterEnd: '#f8feff',
+				glowRgb: '0, 184, 191',
+				glowAlpha: '0.16',
+				gridBg: 'rgba(255, 255, 255, 0.74)'
+			}
+		};
+
+		const MESSAGE_PRESETS = {
+			actual: 'Un reconocimiento muy especial a nuestras mentoras que estuvieron de cumpleaños en meses pasados.\n¡Gracias por inspirar, transformar y seguir dejando huella en MRB!',
+			inspirar: '¡Gracias por inspirar, transformar y dejar huella en MRB!',
+			comunidad: 'Gracias por ser parte de esta comunidad que inspira, transforma y abre camino en MRB.',
+			liderazgo: 'Celebramos su energia, liderazgo e impacto. Gracias por todo lo que construyen cada dia en MRB.'
+		};
 
 		const quitarTildes = (txt = '') => txt
 			.normalize('NFD')
@@ -562,6 +712,47 @@
 			return `${desde.toUpperCase()} - ${hasta.toUpperCase()}`;
 		}
 
+		function actualizarClaseCantidad(total) {
+			gridEl.classList.remove('few-1', 'few-2', 'few-3', 'few-4');
+			if (total >= 1 && total <= 4) {
+				gridEl.classList.add(`few-${total}`);
+			}
+		}
+
+		function aplicarTema(nombreTema) {
+			const tema = THEMES[nombreTema] || THEMES.neutro;
+			document.documentElement.style.setProperty('--page-bg-1', tema.page1);
+			document.documentElement.style.setProperty('--page-bg-2', tema.page2);
+			document.documentElement.style.setProperty('--page-bg-3', tema.page3);
+			document.documentElement.style.setProperty('--poster-start', tema.posterStart);
+			document.documentElement.style.setProperty('--poster-end', tema.posterEnd);
+			document.documentElement.style.setProperty('--poster-glow-rgb', tema.glowRgb);
+			document.documentElement.style.setProperty('--poster-glow-alpha', tema.glowAlpha);
+			document.documentElement.style.setProperty('--grid-bg', tema.gridBg);
+		}
+
+		function escapeHtml(value) {
+			return String(value)
+				.replace(/&/g, '&amp;')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;')
+				.replace(/"/g, '&quot;')
+				.replace(/'/g, '&#39;');
+		}
+
+		function actualizarMensaje() {
+			const selected = messageSelect.value;
+			const isCustom = selected === 'custom';
+			customMessageInput.hidden = !isCustom;
+
+			const rawMessage = isCustom
+				? (customMessageInput.value || 'Escribe tu mensaje personalizado para el poster.')
+				: (MESSAGE_PRESETS[selected] || MESSAGE_PRESETS.actual);
+
+			const safeMessage = escapeHtml(rawMessage).replace(/\n/g, '<br>');
+			posterCopyEl.innerHTML = safeMessage;
+		}
+
 		function renderRango(mesDesde, mesHasta) {
 			const mesesIncluidos = getMesesEnRango(mesDesde, mesHasta);
 			const tituloRango = getTituloRango(mesDesde, mesHasta);
@@ -575,11 +766,13 @@
 
 			if (!items.length) {
 				emptyEl.hidden = false;
+				actualizarClaseCantidad(0);
 				statusEl.textContent = `No se encontraron cumpleaños para ${tituloRango.toLowerCase()}.`;
 				return;
 			}
 
 			emptyEl.hidden = true;
+			actualizarClaseCantidad(items.length);
 			statusEl.textContent = `${items.length} cumpleañera(s) para ${tituloRango.toLowerCase()}.`;
 
 			const esRangoMultiple = mesDesde !== mesHasta;
@@ -660,6 +853,20 @@
 			renderRango(Number(monthFromSelect.value), Number(monthToSelect.value));
 		});
 
+		themeSelect.addEventListener('change', () => {
+			aplicarTema(themeSelect.value);
+		});
+
+		messageSelect.addEventListener('change', () => {
+			actualizarMensaje();
+		});
+
+		customMessageInput.addEventListener('input', () => {
+			if (messageSelect.value === 'custom') {
+				actualizarMensaje();
+			}
+		});
+
 		downloadBtn.addEventListener('click', async () => {
 			const poster = document.getElementById('poster');
 
@@ -693,6 +900,8 @@
 		});
 
 		cargarMentoras();
+		aplicarTema('neutro');
+		actualizarMensaje();
 	</script>
 </body>
 </html>
