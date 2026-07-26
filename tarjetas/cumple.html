@@ -55,6 +55,12 @@
 			text-transform: uppercase;
 		}
 
+		.range-sep {
+			font-weight: 800;
+			color: var(--mrb-morado);
+			font-size: 14px;
+		}
+
 		.toolbar select,
 		.toolbar button {
 			border: 0;
@@ -94,7 +100,7 @@
 		}
 
 		.poster {
-			width: min(760px, 100%);
+			width: min(1024px, 100%);
 			margin: 0 auto;
 			background: linear-gradient(160deg, #ffffff 0%, #fcfcff 100%);
 			border-radius: 32px;
@@ -189,7 +195,7 @@
 
 		.birthday-grid {
 			display: grid;
-			grid-template-columns: repeat(3, minmax(0, 1fr));
+			grid-template-columns: repeat(4, minmax(0, 1fr));
 			gap: 14px 12px;
 		}
 
@@ -228,7 +234,7 @@
 		.day-chip {
 			position: absolute;
 			right: 10px;
-			top: 115px;
+			top: 5px;
 			z-index: 3;
 			font-size: 44px;
 			font-weight: 900;
@@ -373,9 +379,11 @@
 <body>
 	<div class="page-wrap">
 		<div class="toolbar">
-			<label for="mes-select">Mes</label>
-			<select id="mes-select"></select>
-			<button id="btn-descargar" type="button">Descargar mes en PNG</button>
+			<label for="mes-desde">Meses</label>
+			<select id="mes-desde"></select>
+			<span class="range-sep">a</span>
+			<select id="mes-hasta"></select>
+			<button id="btn-descargar" type="button">Descargar rango en PNG</button>
 		</div>
 		<p class="status" id="status">Cargando mentoras...</p>
 
@@ -412,7 +420,8 @@
 		];
 
 		const statusEl = document.getElementById('status');
-		const monthSelect = document.getElementById('mes-select');
+		const monthFromSelect = document.getElementById('mes-desde');
+		const monthToSelect = document.getElementById('mes-hasta');
 		const monthPill = document.getElementById('month-pill');
 		const gridEl = document.getElementById('birthday-grid');
 		const emptyEl = document.getElementById('empty-state');
@@ -520,24 +529,41 @@
 			};
 		}
 
-		function renderMes(mesNumero) {
-			const mesNombre = MONTHS[mesNumero - 1] || 'enero';
-			monthPill.textContent = mesNombre.toUpperCase();
+		function getMesesEnRango(mesDesde, mesHasta) {
+			if (mesDesde <= mesHasta) {
+				return MONTHS.map((_, idx) => idx + 1).filter((n) => n >= mesDesde && n <= mesHasta);
+			}
+
+			// Permite rangos que cruzan fin de año, por ejemplo noviembre a febrero.
+			return MONTHS.map((_, idx) => idx + 1).filter((n) => n >= mesDesde || n <= mesHasta);
+		}
+
+		function getTituloRango(mesDesde, mesHasta) {
+			const desde = MONTHS[mesDesde - 1] || '';
+			const hasta = MONTHS[mesHasta - 1] || '';
+			if (mesDesde === mesHasta) return desde.toUpperCase();
+			return `${desde.toUpperCase()} - ${hasta.toUpperCase()}`;
+		}
+
+		function renderRango(mesDesde, mesHasta) {
+			const mesesIncluidos = getMesesEnRango(mesDesde, mesHasta);
+			const tituloRango = getTituloRango(mesDesde, mesHasta);
+			monthPill.textContent = tituloRango;
 
 			const items = mentorasCumple
-				.filter((m) => m.mes === mesNumero)
-				.sort((a, b) => a.dia - b.dia || a.nombre.localeCompare(b.nombre, 'es'));
+				.filter((m) => mesesIncluidos.includes(m.mes))
+				.sort((a, b) => a.mes - b.mes || a.dia - b.dia || a.nombre.localeCompare(b.nombre, 'es'));
 
 			gridEl.innerHTML = '';
 
 			if (!items.length) {
 				emptyEl.hidden = false;
-				statusEl.textContent = `No se encontraron cumpleaños para ${mesNombre}.`;
+				statusEl.textContent = `No se encontraron cumpleaños para ${tituloRango.toLowerCase()}.`;
 				return;
 			}
 
 			emptyEl.hidden = true;
-			statusEl.textContent = `${items.length} cumpleañera(s) para ${mesNombre}.`;
+			statusEl.textContent = `${items.length} cumpleañera(s) para ${tituloRango.toLowerCase()}.`;
 
 			items.forEach((item) => {
 				const card = document.createElement('article');
@@ -554,13 +580,17 @@
 		}
 
 		function inicializarMeses() {
-			monthSelect.innerHTML = MONTHS
+			const options = MONTHS
 				.map((mes, idx) => `<option value="${idx + 1}">${mes.charAt(0).toUpperCase() + mes.slice(1)}</option>`)
 				.join('');
 
+			monthFromSelect.innerHTML = options;
+			monthToSelect.innerHTML = options;
+
 			const mesActual = new Date().getMonth() + 1;
-			monthSelect.value = String(mesActual);
-			renderMes(mesActual);
+			monthFromSelect.value = '1';
+			monthToSelect.value = String(mesActual);
+			renderRango(Number(monthFromSelect.value), Number(monthToSelect.value));
 		}
 
 		async function cargarMentoras() {
@@ -593,18 +623,25 @@
 			}
 		}
 
-		monthSelect.addEventListener('change', () => {
-			renderMes(Number(monthSelect.value));
+		monthFromSelect.addEventListener('change', () => {
+			renderRango(Number(monthFromSelect.value), Number(monthToSelect.value));
+		});
+
+		monthToSelect.addEventListener('change', () => {
+			renderRango(Number(monthFromSelect.value), Number(monthToSelect.value));
 		});
 
 		downloadBtn.addEventListener('click', async () => {
 			const poster = document.getElementById('poster');
-			const mesNombre = MONTHS[Number(monthSelect.value) - 1] || 'mes';
 
 			downloadBtn.disabled = true;
 			downloadBtn.textContent = 'Generando PNG...';
 
 			try {
+				const mesDesde = Number(monthFromSelect.value);
+				const mesHasta = Number(monthToSelect.value);
+				const etiquetaRango = getTituloRango(mesDesde, mesHasta).toLowerCase().replace(/\s+/g, '_');
+
 				await document.fonts.ready;
 				const canvas = await html2canvas(poster, {
 					scale: 2.6,
@@ -614,7 +651,7 @@
 				});
 
 				const link = document.createElement('a');
-				link.download = `cumple_mrb_${mesNombre}.png`;
+				link.download = `cumple_mrb_${etiquetaRango}.png`;
 				link.href = canvas.toDataURL('image/png');
 				link.click();
 			} catch (error) {
@@ -622,7 +659,7 @@
 				statusEl.textContent = 'No se pudo generar el PNG. Revisa que las imágenes estén accesibles.';
 			} finally {
 				downloadBtn.disabled = false;
-				downloadBtn.textContent = 'Descargar mes en PNG';
+				downloadBtn.textContent = 'Descargar rango en PNG';
 			}
 		});
 
