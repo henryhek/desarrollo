@@ -143,7 +143,8 @@
 		.poster {
 			width: min(1024px, 100%);
 			margin: 0 auto;
-			background: linear-gradient(160deg, var(--poster-start) 0%, var(--poster-end) 100%);
+			/*background: linear-gradient(160deg, var(--poster-start) 0%, var(--poster-end) 100%);*/
+			background-color: var(--mrb-morado);
 			border-radius: 32px;
 			overflow: hidden;
 			border: 2px solid rgba(61, 51, 102, 0.16);
@@ -184,7 +185,7 @@
 			border: 2px solid rgba(61, 51, 102, 0.4);
 			border-radius: 16px;
 			padding: 10px 26px;
-			font-size: 46px;
+			font-size: 1;
 			line-height: 1;
 			font-weight: 500;
 			color: #151520;
@@ -203,7 +204,7 @@
 			display: block;
 			font-size: 78px;
 			font-weight: 900;
-			color: var(--mrb-morado);
+			color: #fff;
 		}
 
 		.headline .line-regular {
@@ -222,7 +223,7 @@
 
 		.grid-wrap {
 			position: relative;
-			z-index: 2;
+			z-index: 5;
 			margin: 0 24px;
 			border: 1px solid rgba(61, 51, 102, 0.28);
 			border-radius: 28px;
@@ -343,7 +344,7 @@
 		}
 
 		.poster-copy {
-			color: #2b2b38;
+			color: #fff;
 			font-size: 1.5rem;
 			line-height: 1.08;
 			margin-bottom: 18px;
@@ -358,6 +359,7 @@
 			width: 160px;
 			max-width: 100%;
 			display: inline-block;
+			z-index: 4;
 		}
 
 		.empty-state {
@@ -378,7 +380,7 @@
 			}
 
 			.month-pill {
-				font-size: 34px;
+				font-size: 1rem;
 				border-radius: 12px;
 				padding: 8px 20px;
 			}
@@ -517,13 +519,13 @@
 			</div>
 
 			<footer class="poster-footer" style="position: relative;"> 
-    <div class="logo-block">
-        <img src="https://hely.com.co/mrb/logo-mrb-white.svg" alt="Logo Mujeres Rompiendo Barreras" onerror="this.src='../mrb-blanco.png'">
-    </div>
+    <div class="logo-block" style="position:relative; z-index: 4;">
+        <img src="https://hely.com.co/mrb/logo-mrb-white.png" alt="Logo Mujeres Rompiendo Barreras" onerror="this.src='../mrb-blanco.png'">
+    </div><div class="" id="" style="position: absolute; bottom: 0; left: 0; width: 100%;"> <img src="https://hely.com.co/mrb/img/fondo-morado.png" alt="Icono de pastel de cumpleaños" style="width: 100%; height: auto;">
+</div>
 </footer>
 
-<div class="" id="" style="position: absolute; bottom: 0; left: 0; width: 100%;"> <img src="https://hely.com.co/mrb/img/fondo-morado.svg" alt="Icono de pastel de cumpleaños" style="width: 100%; height: auto;">
-</div>
+
 		</section>
 	</div>
 
