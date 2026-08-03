@@ -488,6 +488,7 @@
 		<div class="message-controls">
 			<label for="mensaje-select">Mensaje</label>
 			<select id="mensaje-select">
+				<option value="">-- Sin Mensaje --</option>
 				<option value="actual">Reconocimiento especial</option>
 				<option value="inspirar">Gracias por inspirar</option>
 				<option value="comunidad">Gracias por ser parte de MRB</option>
@@ -750,7 +751,7 @@
 
 			const rawMessage = isCustom
 				? (customMessageInput.value || 'Escribe tu mensaje personalizado para el poster.')
-				: (MESSAGE_PRESETS[selected] || MESSAGE_PRESETS.actual);
+				: (MESSAGE_PRESETS[selected] || '');
 
 			const safeMessage = escapeHtml(rawMessage).replace(/\n/g, '<br>');
 			posterCopyEl.innerHTML = safeMessage;
@@ -812,9 +813,9 @@
 			monthFromSelect.innerHTML = options;
 			monthToSelect.innerHTML = options;
 
-			const mesActual = new Date().getMonth() + 1;
-			monthFromSelect.value = '1';
-			monthToSelect.value = String(mesActual);
+			// const mesActual = new Date().getMonth() + 1;
+			// monthFromSelect.value = '1';
+			// monthToSelect.value = String(mesActual);
 			renderRango(Number(monthFromSelect.value), Number(monthToSelect.value));
 		}
 
