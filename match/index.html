@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Match Mentora - Mentee | MRB</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+	<style>
+		:root {
+			--page-bg-1: #ffffff;
+			--page-bg-2: #f6f5fb;
+			--page-bg-3: #ece9f8;
+			--poster-start: #43376f;
+			--poster-end: #3a2f63;
+			--card-title-mentora-bg: #b31c82;
+			--card-title-mentee-bg: #0097A1;
+			--card-shell-bg: rgba(255, 255, 255, 0.08);
+			--photo-shell-bg: rgba(255, 255, 255, 0.2);
+			--text-light: #ffffff;
+			--poster-text: #ffffff;
+			--status-text: #3d3366;
+			--toolbar-bg: #ffffff;
+			--toolbar-text: #30294a;
+			--grid-cols: 3; /* 3 pairs per row */
+			--grid-gap: 20px;
+			--caption-min-h: 90px;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Montserrat', sans-serif;
+			background:
+				radial-gradient(circle at 8% 8%, var(--page-bg-1) 0%, rgba(255, 255, 255, 0.2) 28%, transparent 45%),
+				linear-gradient(180deg, var(--page-bg-1) 0%, var(--page-bg-2) 40%, var(--page-bg-3) 100%);
+			padding: 20px;
+			min-height: 100vh;
+			color: #1c1630;
+		}
+
+		.app {
+			max-width: 1260px;
+			margin: 0 auto;
+		}
+
+		.toolbar {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			gap: 10px;
+			padding: 14px;
+			margin-bottom: 14px;
+			border-radius: 12px;
+			background: var(--toolbar-bg);
+			box-shadow: 0 10px 26px rgba(44, 35, 77, 0.12);
+		}
+
+		.toolbar label {
+			font-size: 12px;
+			font-weight: 700;
+			color: var(--toolbar-text);
+			letter-spacing: 0.03em;
+			text-transform: uppercase;
+			align-self: center;
+		}
+
+		.toolbar select,
+		.toolbar button {
+			font-family: inherit;
+			font-weight: 700;
+			border-radius: 10px;
+			border: 1px solid rgba(60, 52, 95, 0.18);
+			height: 40px;
+		}
+
+		.toolbar select {
+			padding: 0 12px;
+			color: #2b2350;
+			background: #ffffff;
+		}
+
+		.toolbar button {
+			border: 0;
+			padding: 0 14px;
+			cursor: pointer;
+			color: white;
+			background: #b31c82;
+			box-shadow: 0 10px 20px rgba(179, 28, 130, 0.22);
+			transition: transform .2s ease, box-shadow .2s ease;
+		}
+
+		.toolbar button.secondary {
+			background: #4f4583;
+			box-shadow: 0 10px 20px rgba(79, 69, 131, 0.24);
+		}
+
+		.toolbar button:hover {
+			transform: translateY(-1px);
+		}
+
+		.toolbar button:disabled {
+			opacity: .55;
+			cursor: not-allowed;
+			transform: none;
+		}
+
+		.toolbar .filter-buttons {
+			display: flex;
+			gap: 6px;
+			align-items: center;
+			border-left: 1px solid rgba(60, 52, 95, 0.18);
+			margin-left: 10px;
+			padding-left: 10px;
+		}
+		.toolbar .filter-buttons button {
+			font-family: inherit;
+			font-weight: 700;
+			border-radius: 10px;
+			border: 1px solid rgba(60, 52, 95, 0.18);
+			height: 40px;
+			padding: 0 14px;
+			cursor: pointer;
+			background: #ffffff;
+			color: #2b2350;
+			transition: background-color .2s, color .2s;
+		}
+		.toolbar .filter-buttons button.active {
+			background: #4f4583;
+			color: white;
+			box-shadow: 0 4px 12px rgba(79, 69, 131, 0.2);
+		}
+
+		.status {
+			text-align: center;
+			font-size: 14px;
+			font-weight: 600;
+			color: var(--status-text);
+			min-height: 24px;
+			margin-bottom: 12px;
+		}
+
+		.poster {
+			width: min(1120px, 100%);
+			margin: 0 auto;
+			border-radius: 12px;
+			background: linear-gradient(160deg, var(--poster-start) 0%, var(--poster-end) 100%);
+			padding: 22px 20px 24px;
+			box-shadow: 0 22px 38px rgba(40, 30, 71, 0.25);
+		}
+
+		.poster-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 18px;
+			padding: 0 20px;
+		}
+
+		.logo {
+			display: block;
+			width: 130px;
+			height: auto;
+		}
+        .logo.match-logo {
+            width: 100px;
+        }
+
+		.poster-title {
+			font-size: 38px;
+			font-weight: 800;
+			color: var(--poster-text);
+			line-height: 1;
+			letter-spacing: .01em;
+            text-align: center;
+		}
+
+		.poster-grid {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-content: flex-start;
+			gap: var(--grid-gap);
+		}
+
+        .match-pair {
+            display: flex;
+            gap: 4px;
+            flex: 0 1 calc((100% - (var(--grid-cols) - 1) * var(--grid-gap)) / var(--grid-cols));
+			max-width: calc((100% - (var(--grid-cols) - 1) * var(--grid-gap)) / var(--grid-cols));
+            transition: transform .2s ease-in-out;
+        }
+        .match-pair:hover {
+            transform: scale(1.02);
+        }
+
+		.person-card {
+			background: var(--card-shell-bg);
+			overflow: hidden;
+			backdrop-filter: blur(2px);
+            flex: 1;
+            min-width: 0;
+		}
+
+        .mentora-card {
+            border-radius: 8px 0 0 8px;
+        }
+        .mentee-card {
+            border-radius: 0 8px 8px 0;
+        }
+
+		.person-photo-wrap {
+			aspect-ratio: 1 / 1;
+			background: var(--photo-shell-bg);
+		}
+
+		.person-photo {
+			width: 100%;
+			height: 100%;
+			display: block;
+			object-fit: cover;
+		}
+
+		.person-caption {
+			padding: 10px 8px 12px;
+			text-align: center;
+			min-height: var(--caption-min-h);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			gap: 4px;
+		}
+        
+        .mentora-card .person-caption {
+            background: var(--card-title-mentora-bg);
+        }
+        .mentee-card .person-caption {
+            background: var(--card-title-mentee-bg);
+        }
+
+		.person-name {
+			color: var(--text-light);
+			font-size: .8rem;
+			font-weight: 800;
+			line-height: 1.1;
+		}
+
+		.person-info {
+			color: rgba(255, 255, 255, 0.95);
+			font-size: 10px;
+			font-weight: 500;
+			line-height: 1.2;
+		}
+
+		.pagination {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 10px;
+			margin-top: 14px;
+		}
+
+		.pagination button {
+			font-family: inherit;
+			font-weight: 700;
+			border: 0;
+			color: #ffffff;
+			background: #4f4583;
+			padding: 8px 14px;
+			border-radius: 8px;
+			cursor: pointer;
+		}
+
+		.pagination button:disabled {
+			opacity: .4;
+			cursor: not-allowed;
+		}
+
+		.page-indicator {
+			color: #2d2550;
+			font-weight: 700;
+		}
+
+		.empty-state {
+			text-align: center;
+			padding: 28px 12px;
+			color: var(--poster-text);
+			font-weight: 600;
+			grid-column: 1 / -1;
+            width: 100%;
+		}
+
+		@media (max-width: 1120px) {
+			.poster-grid {
+				--grid-cols: 2;
+			}
+		}
+
+		@media (max-width: 760px) {
+			body {
+				padding: 12px;
+			}
+            .poster-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+			.poster {
+				padding: 16px 10px 14px;
+			}
+			.poster-title {
+				font-size: 30px;
+			}
+			.poster-grid {
+				--grid-cols: 1;
+				--grid-gap: 16px;
+			}
+            .person-name {
+                font-size: 1rem;
+            }
+            .person-info {
+                font-size: 0.8rem;
+            }
+		}
+	</style>
+</head>
+<body>
+	<div class="app">
+		<div class="toolbar">
+			<label for="bg-theme">Color fondo</label>
+			<select id="bg-theme">
+				<option value="morado" selected>Morado</option>
+				<option value="fucsia">Fucsia</option>
+				<option value="blanco-gradient">Blanco con gradient</option>
+			</select>
+
+			<label for="pairs-per-page">Parejas por pagina</label>
+			<select id="pairs-per-page">
+				<option value="3">3</option>
+				<option value="6" selected>6</option>
+				<option value="9">9</option>
+				<option value="12">12</option>
+			</select>
+
+			<div class="filter-buttons">
+                <label>Modalidad</label>
+                <button id="filter-all" class="active">Todas</button>
+                <button id="filter-virtual">Virtual</button>
+                <button id="filter-presencial">Presencial</button>
+            </div>
+            
+			<button id="btn-download-current" type="button">Descargar pagina actual</button>
+			<button id="btn-download-all" class="secondary" type="button">Descargar todas las paginas</button>
+		</div>
+		<p id="status" class="status">Cargando parejas...</p>
+
+		<section class="poster" id="poster">
+			<header class="poster-header">
+				<img class="logo" src="../logo-mrb-white.svg" alt="Mujeres Rompiendo Barreras" onerror="this.src='../logo-mrb.png'">
+				<h1 class="poster-title">Match 2026</h1>
+                <img class="logo match-logo" src="../img/match.svg" alt="Match">
+			</header>
+
+			<div id="poster-grid" class="poster-grid"></div>
+			<p id="poster-empty" class="empty-state" hidden>No hay parejas para mostrar.</p>
+
+		</section>
+
+		<div class="pagination">
+			<button id="prev-page" type="button">Anterior</button>
+			<span id="page-indicator" class="page-indicator">Pagina 1 de 1</span>
+			<button id="next-page" type="button">Siguiente</button>
+		</div>
+	</div>
+
+	<script>
+		const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFJCIEl-LRh3sJq2Jqb9poYhUk5M0EWLtV0U_v9Q8q5omtIUGt9N0onxGYZnh6MbfRhA/exec';
+		const PHOTO_BASE_PATH = '../tarjetas/assets/fotos/'; // Ruta base para las imágenes de las personas
+
+		const THEMES = {
+			morado: {
+				page1: '#ffffff',
+				page2: '#f6f5fb',
+				page3: '#ece9f8',
+				posterStart: '#43376f',
+				posterEnd: '#3a2f63',
+				posterText: '#ffffff',
+				statusText: '#3d3366',
+				cardShellBg: 'rgba(255, 255, 255, 0.08)',
+				photoShellBg: 'rgba(255, 255, 255, 0.2)'
+			},
+			fucsia: {
+				page1: '#ffffff',
+				page2: '#fdf6fb',
+				page3: '#f8e9f2',
+				posterStart: '#b31c82',
+				posterEnd: '#94146b',
+				posterText: '#ffffff',
+				statusText: '#7d285f',
+				cardShellBg: 'rgba(255, 255, 255, 0.1)',
+				photoShellBg: 'rgba(255, 255, 255, 0.24)'
+			},
+			'blanco-gradient': {
+				page1: '#ffffff',
+				page2: '#f8f8fc',
+				page3: '#f1f2f8',
+				posterStart: '#ffffff',
+				posterEnd: '#fcfcff',
+				posterText: '#3d3366',
+				statusText: '#3d3366',
+				cardShellBg: 'rgba(61, 51, 102, 0.06)',
+				photoShellBg: 'rgba(61, 51, 102, 0.1)'
+			}
+		};
+
+		const statusEl = document.getElementById('status');
+		const bgThemeSelect = document.getElementById('bg-theme');
+		const pairsPerPageSelect = document.getElementById('pairs-per-page');
+		const posterGridEl = document.getElementById('poster-grid');
+		const posterEmptyEl = document.getElementById('poster-empty');
+		const pageIndicatorEl = document.getElementById('page-indicator');
+		const prevPageBtn = document.getElementById('prev-page');
+		const nextPageBtn = document.getElementById('next-page');
+		const downloadCurrentBtn = document.getElementById('btn-download-current');
+		const downloadAllBtn = document.getElementById('btn-download-all');
+		const posterEl = document.getElementById('poster');
+		const filterAllBtn = document.getElementById('filter-all');
+		const filterVirtualBtn = document.getElementById('filter-virtual');
+		const filterPresencialBtn = document.getElementById('filter-presencial');
+
+		let allPairs = [];
+		let filteredPairs = [];
+		let currentPage = 1;
+		let pairsPerPage = Number(pairsPerPageSelect.value);
+		let currentFilter = 'all';
+
+		const quitarTildes = (txt = '') => String(txt)
+			.normalize('NFD')
+			.replace(/[\u0300-\u036f]/g, '')
+			.toLowerCase()
+			.trim();
+
+		const estaMarcado = (valor) => {
+			if (valor === undefined || valor === null || valor === "") return false;
+			if (typeof valor === 'boolean') return valor;
+			const texto = String(valor).trim().toLowerCase();
+			return texto === "true" ||
+				texto === "verdadero" ||
+				texto === "sí" ||
+				texto === "si" ||
+				texto === "1" ||
+				texto === "yes" ||
+				texto === "on" ||
+				texto === "x";
+		};
+
+		function getValueByKey(row, posiblesLlaves) {
+			const keys = Object.keys(row || {});
+			const found = keys.find((key) => {
+				const normalizedKey = quitarTildes(key).replace(/[\s_-]/g, '');
+				return posiblesLlaves.some((candidate) => {
+                    const cleanCandidate = candidate.replace(/[\s_-]/g, '');
+                    return normalizedKey === cleanCandidate;
+                });
+			});
+
+			return found ? row[found] : '';
+		}
+
+		function resolverFoto(fotoRaw, role = 'mentora') {
+            const fallback = '../assets/fotos/placeholder.png';
+			const foto = String(fotoRaw || '').trim();
+			if (!foto) return fallback;
+
+			// Si ya es una URL completa (http, https), la usamos directamente
+			if (/^https?:\/\//i.test(foto)) return foto;
+
+            // Extraemos solo el nombre del archivo de la ruta que venga en el sheet
+            const filename = foto.split('/').pop();
+			
+			return `${PHOTO_BASE_PATH}${filename}`;
+		}
+
+		function normalizePair(row) {
+			const mentoraNombre = getValueByKey(row, ['mentora']);
+			const menteeNombre = getValueByKey(row, ['mentee']);
+
+			if (!String(mentoraNombre || '').trim() || !String(menteeNombre || '').trim()) return null;
+
+			const mentoraProfesion = getValueByKey(row, ['profesion mentora', 'profesion']);
+			const mentoraFoto = getValueByKey(row, ['foto mentora', 'foto_mentora']);
+			const menteeFoto = getValueByKey(row, ['foto mentee', 'foto_mentee']);
+			
+			const modalidad = String(getValueByKey(row, ['modalidad'])).toLowerCase();
+			const virtualCol = getValueByKey(row, ['virtual']);
+			const presencialCol = getValueByKey(row, ['presencial']);
+
+			let esVirtual = false;
+			let esPresencial = false;
+
+			if (modalidad) {
+				esVirtual = modalidad.includes('virtual') || modalidad.includes('ambas');
+				esPresencial = modalidad.includes('presencial') || modalidad.includes('ambas');
+			} else {
+				esVirtual = estaMarcado(virtualCol);
+				esPresencial = estaMarcado(presencialCol);
+			}
+
+			return {
+				mentora: {
+					nombre: String(mentoraNombre).trim(),
+					profesion: String(mentoraProfesion || '').trim(),
+					foto: resolverFoto(mentoraFoto, 'mentora'),
+				},
+				mentee: {
+					nombre: String(menteeNombre).trim(),
+					foto: resolverFoto(menteeFoto, 'mentee'),
+				},
+				virtual: esVirtual,
+				presencial: esPresencial,
+			};
+		}
+
+		function applyTheme(themeName) {
+			const theme = THEMES[themeName] || THEMES.morado;
+			document.documentElement.style.setProperty('--page-bg-1', theme.page1);
+			document.documentElement.style.setProperty('--page-bg-2', theme.page2);
+			document.documentElement.style.setProperty('--page-bg-3', theme.page3);
+			document.documentElement.style.setProperty('--poster-start', theme.posterStart);
+			document.documentElement.style.setProperty('--poster-end', theme.posterEnd);
+			document.documentElement.style.setProperty('--poster-text', theme.posterText);
+			document.documentElement.style.setProperty('--status-text', theme.statusText);
+			document.documentElement.style.setProperty('--card-shell-bg', theme.cardShellBg);
+			document.documentElement.style.setProperty('--photo-shell-bg', theme.photoShellBg);
+		}
+
+		function applyFilter() {
+			if (currentFilter === 'virtual') {
+				filteredPairs = allPairs.filter(p => p.virtual && !p.presencial);
+			} else if (currentFilter === 'presencial') {
+				filteredPairs = allPairs.filter(p => p.presencial);
+			} else {
+				filteredPairs = [...allPairs];
+			}
+		}
+
+		function totalPages() {
+			return Math.max(1, Math.ceil(filteredPairs.length / pairsPerPage));
+		}
+
+		function getCurrentPageItems() {
+			const start = (currentPage - 1) * pairsPerPage;
+			return filteredPairs.slice(start, start + pairsPerPage);
+		}
+
+        function createPersonCard(person, role) {
+            const card = document.createElement('article');
+            card.className = `person-card ${role}-card`;
+
+            const safeName = escapeHtml(person.nombre);
+            const safeInfo = escapeHtml(person.profesion || '');
+
+            card.innerHTML = `
+                <div class="person-photo-wrap">
+                    <img class="person-photo" src="${person.foto}" alt="${safeName}" loading="lazy" onerror="this.onerror=null;this.src='../assets/fotos/placeholder.png';">
+                </div>
+                <div class="person-caption">
+                    <h3 class="person-name">${safeName}</h3>
+                    ${(role === 'mentora' && safeInfo) ? `<p class="person-info">${safeInfo}</p>` : ''}
+                </div>
+            `;
+            return card;
+        }
+
+		function render() {
+			applyFilter();
+			const pages = totalPages();
+			if (currentPage > pages) currentPage = pages;
+
+			const pageItems = getCurrentPageItems();
+			posterGridEl.innerHTML = '';
+
+			if (!pageItems.length) {
+				posterEmptyEl.hidden = false;
+				pageIndicatorEl.textContent = 'Pagina 1 de 1';
+				prevPageBtn.disabled = true;
+				nextPageBtn.disabled = true;
+				statusEl.textContent = `No hay parejas para el filtro "${currentFilter}".`;
+                posterGridEl.style.minHeight = '100px';
+				return;
+			}
+
+			posterEmptyEl.hidden = true;
+			pageItems.forEach((pair) => {
+                const pairEl = document.createElement('div');
+                pairEl.className = 'match-pair';
+				
+                const menteeCard = createPersonCard(pair.mentee, 'mentee');
+                const mentoraCard = createPersonCard(pair.mentora, 'mentora');
+
+                pairEl.appendChild(mentoraCard);
+                pairEl.appendChild(menteeCard);
+
+				posterGridEl.appendChild(pairEl);
+			});
+
+            const styles = getComputedStyle(posterGridEl);
+			const cols = Math.max(1, parseInt(styles.getPropertyValue('--grid-cols'), 10) || 1);
+            const rows = Math.ceil(pageItems.length / cols);
+            const cardHeight = posterGridEl.querySelector('.match-pair')?.offsetHeight || 300;
+            const gap = parseFloat(styles.getPropertyValue('--grid-gap')) || 0;
+            posterGridEl.style.minHeight = `${rows * cardHeight + (rows - 1) * gap}px`;
+
+
+			pageIndicatorEl.textContent = `Pagina ${currentPage} de ${pages}`;
+			prevPageBtn.disabled = currentPage <= 1;
+			nextPageBtn.disabled = currentPage >= pages;
+			statusEl.textContent = `${allPairs.length} parejas cargadas. Mostrando ${filteredPairs.length} con filtro "${currentFilter}".`;
+		}
+
+		function escapeHtml(value) {
+			return String(value)
+				.replace(/&/g, '&amp;')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;')
+				.replace(/"/g, '&quot;')
+				.replace(/'/g, '&#39;');
+		}
+
+		function fileNameForPage(page) {
+			return `match_mrb_2026_pagina_${String(page).padStart(2, '0')}.png`;
+		}
+
+		function triggerDownload(canvas, fileName) {
+			const link = document.createElement('a');
+			link.download = fileName;
+			link.href = canvas.toDataURL('image/png');
+			link.click();
+		}
+
+		async function exportCurrentPage(pageNumber = currentPage) {
+			await document.fonts.ready;
+			const canvas = await html2canvas(posterEl, {
+				scale: 2.4,
+				useCORS: true,
+				allowTaint: true,
+				backgroundColor: null
+			});
+			triggerDownload(canvas, fileNameForPage(pageNumber));
+		}
+
+		function waitForFrame() {
+			return new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+		}
+
+		async function exportAllPages() {
+			const pages = totalPages();
+			if (!filteredPairs.length) return;
+
+			const previousPage = currentPage;
+			downloadAllBtn.disabled = true;
+			downloadCurrentBtn.disabled = true;
+			downloadAllBtn.textContent = 'Generando...';
+			statusEl.textContent = `Exportando ${pages} pagina(s)...`;
+
+			try {
+				for (let page = 1; page <= pages; page += 1) {
+					currentPage = page;
+					render();
+					await waitForFrame();
+					await exportCurrentPage(page);
+				}
+			} finally {
+				currentPage = previousPage;
+				render();
+				downloadAllBtn.disabled = false;
+				downloadCurrentBtn.disabled = false;
+				downloadAllBtn.textContent = 'Descargar todas las paginas';
+			}
+		}
+
+		async function loadData() {
+			try {
+				statusEl.textContent = 'Cargando parejas desde Google Sheets...';
+
+				const url = new URL(SCRIPT_URL);
+				url.searchParams.append('sheet', 'match-2026');
+				url.searchParams.append('t', Date.now());
+
+				const response = await fetch(url);
+				if (!response.ok) {
+					const errorText = await response.text();
+					throw new Error(`Error de red: ${response.statusText}. Respuesta: ${errorText}`);
+				}
+
+				const data = await response.json();
+				if (data.error) throw new Error(`Error del script: ${data.error}`);
+				if (!Array.isArray(data)) throw new Error('La respuesta del Sheet no es un arreglo válido.');
+
+				allPairs = data
+					.map(normalizePair)
+					.filter(Boolean)
+					.sort((a, b) => a.mentora.nombre.localeCompare(b.mentora.nombre, 'es'));
+
+				render();
+			} catch (error) {
+				console.error(error);
+				statusEl.textContent = `Error al cargar: ${error.message}. Revisa la consola para más detalles.`;
+			}
+		}
+
+		function handleFilterClick(filter) {
+			currentFilter = filter;
+			currentPage = 1;
+			
+			filterAllBtn.classList.toggle('active', filter === 'all');
+			filterVirtualBtn.classList.toggle('active', filter === 'virtual');
+			filterPresencialBtn.classList.toggle('active', filter === 'presencial');
+			
+			render();
+		}
+
+		filterAllBtn.addEventListener('click', () => handleFilterClick('all'));
+		filterVirtualBtn.addEventListener('click', () => handleFilterClick('virtual'));
+		filterPresencialBtn.addEventListener('click', () => handleFilterClick('presencial'));
+
+		bgThemeSelect.addEventListener('change', () => {
+			applyTheme(bgThemeSelect.value);
+		});
+
+		pairsPerPageSelect.addEventListener('change', () => {
+			pairsPerPage = Math.max(1, Number(pairsPerPageSelect.value) || 6);
+			currentPage = 1;
+			render();
+		});
+
+		prevPageBtn.addEventListener('click', () => {
+			currentPage = Math.max(1, currentPage - 1);
+			render();
+		});
+
+		nextPageBtn.addEventListener('click', () => {
+			currentPage = Math.min(totalPages(), currentPage + 1);
+			render();
+		});
+
+		window.addEventListener('resize', () => {
+			render();
+		});
+
+		downloadCurrentBtn.addEventListener('click', async () => {
+			if (!filteredPairs.length) return;
+			downloadCurrentBtn.disabled = true;
+			const originalText = downloadCurrentBtn.textContent;
+			downloadCurrentBtn.textContent = 'Generando...';
+
+			try {
+				await exportCurrentPage(currentPage);
+			} catch (error) {
+				console.error(error);
+				statusEl.textContent = 'No se pudo descargar la pagina actual. Revisa que las imagenes sean accesibles.';
+			} finally {
+				downloadCurrentBtn.textContent = originalText;
+				downloadCurrentBtn.disabled = false;
+			}
+		});
+
+		downloadAllBtn.addEventListener('click', async () => {
+			try {
+				await exportAllPages();
+			} catch (error) {
+				console.error(error);
+				statusEl.textContent = 'No se pudieron exportar todas las paginas.';
+			}
+		});
+
+		applyTheme('morado');
+		loadData();
+	</script>
+</body>
+</html>
