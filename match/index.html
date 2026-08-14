@@ -63,6 +63,18 @@
 			box-shadow: 0 10px 26px rgba(44, 35, 77, 0.12);
 		}
 
+		.toolbar-group {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.toolbar-group + .toolbar-group {
+			border-left: 1px solid rgba(60, 52, 95, 0.18);
+			margin-left: 10px;
+			padding-left: 20px;
+		}
+
 		.toolbar label {
 			font-size: 12px;
 			font-weight: 700;
@@ -116,9 +128,7 @@
 			display: flex;
 			gap: 6px;
 			align-items: center;
-			border-left: 1px solid rgba(60, 52, 95, 0.18);
-			margin-left: 10px;
-			padding-left: 10px;
+			
 		}
 		.toolbar .filter-buttons button {
 			font-family: inherit;
@@ -286,6 +296,42 @@
 			font-weight: 700;
 		}
 
+		.download-actions {
+			display: flex;
+			justify-content: center;
+			gap: 10px;
+			margin-top: 20px;
+		}
+
+		.download-actions button {
+			font-family: inherit;
+			font-weight: 700;
+			border-radius: 10px;
+			border: 0;
+			padding: 0 14px;
+			cursor: pointer;
+			color: white;
+			background: #b31c82;
+			box-shadow: 0 10px 20px rgba(179, 28, 130, 0.22);
+			transition: transform .2s ease, box-shadow .2s ease;
+			height: 40px;
+		}
+
+		.download-actions button.secondary {
+			background: #4f4583;
+			box-shadow: 0 10px 20px rgba(79, 69, 131, 0.24);
+		}
+
+		.download-actions button:hover {
+			transform: translateY(-1px);
+		}
+
+		.download-actions button:disabled {
+			opacity: .55;
+			cursor: not-allowed;
+			transform: none;
+		}
+
 		.empty-state {
 			text-align: center;
 			padding: 28px 12px;
@@ -331,30 +377,29 @@
 <body>
 	<div class="app">
 		<div class="toolbar">
-			<label for="bg-theme">Color fondo</label>
-			<select id="bg-theme">
-				<option value="morado" selected>Morado</option>
-				<option value="fucsia">Fucsia</option>
-				<option value="blanco-gradient">Blanco con gradient</option>
-			</select>
-
-			<label for="pairs-per-page">Parejas por pagina</label>
-			<select id="pairs-per-page">
-				<option value="3">3</option>
-				<option value="6" selected>6</option>
-				<option value="9">9</option>
-				<option value="12">12</option>
-			</select>
-
-			<div class="filter-buttons">
-                <label>Modalidad</label>
-                <button id="filter-all" class="active">Todas</button>
-                <button id="filter-virtual">Virtual</button>
-                <button id="filter-presencial">Presencial</button>
-            </div>
-            
-			<button id="btn-download-current" type="button">Descargar pagina actual</button>
-			<button id="btn-download-all" class="secondary" type="button">Descargar todas las paginas</button>
+			<div class="toolbar-group">
+				<label for="bg-theme">Color fondo</label>
+				<select id="bg-theme">
+					<option value="morado" selected>Morado</option>
+					<option value="fucsia">Fucsia</option>
+					<option value="blanco-gradient">Blanco con gradient</option>
+				</select>
+				<label for="pairs-per-page">Parejas por pagina</label>
+				<select id="pairs-per-page">
+					<option value="3">3</option>
+					<option value="6" selected>6</option>
+					<option value="9">9</option>
+					<option value="12">12</option>
+				</select>
+			</div>
+			<div class="toolbar-group">
+				<div class="filter-buttons">
+					<label>Modalidad</label>
+					<button id="filter-presencial" class="active">Presencial</button>
+					<button id="filter-virtual">Virtual</button>
+					<button id="filter-all">Todas</button>
+				</div>
+			</div>
 		</div>
 		<p id="status" class="status">Cargando parejas...</p>
 
@@ -374,6 +419,11 @@
 			<button id="prev-page" type="button">Anterior</button>
 			<span id="page-indicator" class="page-indicator">Pagina 1 de 1</span>
 			<button id="next-page" type="button">Siguiente</button>
+		</div>
+
+		<div class="download-actions">
+			<button id="btn-download-current" type="button">Descargar pagina actual</button>
+			<button id="btn-download-all" class="secondary" type="button">Descargar todas las paginas</button>
 		</div>
 	</div>
 
@@ -436,7 +486,7 @@
 		let filteredPairs = [];
 		let currentPage = 1;
 		let pairsPerPage = Number(pairsPerPageSelect.value);
-		let currentFilter = 'all';
+		let currentFilter = 'presencial';
 
 		const quitarTildes = (txt = '') => String(txt)
 			.normalize('NFD')
@@ -472,7 +522,7 @@
 		}
 
 		function resolverFoto(fotoRaw, role = 'mentora') {
-            const fallback = '../assets/fotos/placeholder.png';
+            const fallback = '../tarjetas/assets/fotos/placeholder.png';
 			const foto = String(fotoRaw || '').trim();
 			if (!foto) return fallback;
 
@@ -480,7 +530,7 @@
 			if (/^https?:\/\//i.test(foto)) return foto;
 
             // Extraemos solo el nombre del archivo de la ruta que venga en el sheet
-            const filename = foto.split('/').pop();
+            const filename = foto.split('/').pop().toLowerCase();
 			
 			return `${PHOTO_BASE_PATH}${filename}`;
 		}
@@ -558,23 +608,38 @@
 		}
 
         function createPersonCard(person, role) {
-            const card = document.createElement('article');
-            card.className = `person-card ${role}-card`;
+			const card = document.createElement('article');
+			card.className = `person-card ${role}-card`;
 
-            const safeName = escapeHtml(person.nombre);
-            const safeInfo = escapeHtml(person.profesion || '');
+			const safeName = escapeHtml(person.nombre);
+			const safeInfo = escapeHtml(person.profesion || '');
 
-            card.innerHTML = `
-                <div class="person-photo-wrap">
-                    <img class="person-photo" src="${person.foto}" alt="${safeName}" loading="lazy" onerror="this.onerror=null;this.src='../assets/fotos/placeholder.png';">
-                </div>
-                <div class="person-caption">
-                    <h3 class="person-name">${safeName}</h3>
-                    ${(role === 'mentora' && safeInfo) ? `<p class="person-info">${safeInfo}</p>` : ''}
-                </div>
-            `;
-            return card;
-        }
+			let imgSrc = person.foto;
+			let onErrorLogic = `this.onerror=null;this.src='../assets/fotos/placeholder.png';`;
+
+			if (role === 'mentee') {
+				const fullPath = person.foto;
+				let pathWithoutExt = fullPath;
+				const lastDotIndex = fullPath.lastIndexOf('.');
+				// Solo quitar la extensión si es una de imagen conocida, para no cortar nombres con puntos (ej: ana.perez)
+				if (lastDotIndex !== -1 && ['jpg', 'jpeg', 'png'].includes(fullPath.substring(lastDotIndex + 1))) {
+					pathWithoutExt = fullPath.substring(0, lastDotIndex);
+				}
+				imgSrc = `${pathWithoutExt}.jpg`;
+				onErrorLogic = `if (this.src.endsWith('.jpg')) { this.src = '${pathWithoutExt}.png'; } else { this.onerror=null; this.src='../assets/fotos/placeholder.png'; }`;
+			}
+
+			card.innerHTML = `
+				<div class="person-photo-wrap">
+					<img class="person-photo" src="${imgSrc}" alt="${safeName}" loading="lazy" onerror="${onErrorLogic}">
+				</div>
+				<div class="person-caption">
+					<h3 class="person-name">${safeName}</h3>
+					${(role === 'mentora' && safeInfo) ? `<p class="person-info">${safeInfo}</p>` : ''}
+				</div>
+			`;
+			return card;
+		}
 
 		function render() {
 			applyFilter();
